@@ -1,36 +1,15 @@
 {
-<<<<<<< HEAD
-  "name": "c.a.n.d.y",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
-=======
   "name": "demo-repo",
   "version": "0.2.0",
   "description": "A sample package.json",
   "dependencies": {
-    "@primer/css": "17.0.1"
+    "@ai-sdk/openai": "^3.0.53",
+    "ai": "^6.0.168",
+    "mongodb": "^7.1.1",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.3.6"
   },
   "license": "MIT"
->>>>>>> f407237052439f0d2a37209d6539409f4490c8f6
 }
