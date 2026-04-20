@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "c.a.n.d.y",
   "version": "0.1.0",
   "private": true,
@@ -23,4 +24,13 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   }
+=======
+  "name": "demo-repo",
+  "version": "0.2.0",
+  "description": "A sample package.json",
+  "dependencies": {
+    "@primer/css": "17.0.1"
+  },
+  "license": "MIT"
+>>>>>>> f407237052439f0d2a37209d6539409f4490c8f6
 }
