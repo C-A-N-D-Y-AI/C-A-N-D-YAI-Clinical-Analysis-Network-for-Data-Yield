@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import Link from 'next/link';
 
 export default function RegisterForm() {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
@@ -16,7 +18,7 @@ export default function RegisterForm() {
             const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ firstName, lastName, email, password }),
             });
 
             const data = await res.json();
@@ -26,10 +28,10 @@ export default function RegisterForm() {
             }
 
             await Swal.fire({
-                title: '¡Registro Exitoso!',
-                text: 'Tu cuenta ha sido creada.',
+                title: `¡Bienvenido a CANDY, ${firstName}!`,
+                text: 'Tu cuenta ha sido creada. Por favor inicia sesión.',
                 icon: 'success',
-                timer: 2000,
+                timer: 1500,
                 showConfirmButton: false,
             });
 
@@ -49,26 +51,50 @@ export default function RegisterForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
-            <h2 className="text-xl font-semibold text-white/90 text-center mb-2">Crea tu cuenta</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+            <h2 className="text-xl font-semibold text-[#152A47] text-center mb-2">Crea tu cuenta</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-[#152A47] ml-1">Nombre</label>
+                    <input
+                        type="text"
+                        placeholder="Tu nombre"
+                        className="w-full bg-white border border-[#EAEAEA] p-3 rounded-xl text-[#152A47] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/40 focus:border-[#00B4D8] transition-all"
+                        value={firstName}
+                        onChange={e => setFirstName(e.target.value)}
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-[#152A47] ml-1">Apellido</label>
+                    <input
+                        type="text"
+                        placeholder="Tu apellido"
+                        className="w-full bg-white border border-[#EAEAEA] p-3 rounded-xl text-[#152A47] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/40 focus:border-[#00B4D8] transition-all"
+                        value={lastName}
+                        onChange={e => setLastName(e.target.value)}
+                    />
+                </div>
+            </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-400 ml-1">Correo Electrónico</label>
+                <label className="text-sm font-medium text-[#152A47] ml-1">Correo Electrónico</label>
                 <input
                     type="email"
                     placeholder="ejemplo@correo.com"
-                    className="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                    className="w-full bg-white border border-[#EAEAEA] p-3 rounded-xl text-[#152A47] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/40 focus:border-[#00B4D8] transition-all"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                 />
             </div>
 
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-400 ml-1">Contraseña</label>
+                <label className="text-sm font-medium text-[#152A47] ml-1">Contraseña</label>
                 <input
                     type="password"
                     placeholder="••••••••"
-                    className="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                    className="w-full bg-white border border-[#EAEAEA] p-3 rounded-xl text-[#152A47] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/40 focus:border-[#00B4D8] transition-all"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                 />
@@ -76,7 +102,7 @@ export default function RegisterForm() {
 
             <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98] mt-2"
+                className="w-full bg-[#E07A5F] hover:bg-[#d66a54] text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-[#E07A5F]/20 active:scale-[0.98] mt-2"
             >
                 Registrar Cuenta
             </button>
@@ -84,7 +110,7 @@ export default function RegisterForm() {
             <div className="text-center mt-2">
                 <p className="text-sm text-gray-500">
                     ¿Ya tienes cuenta?{" "}
-                    <Link href="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                    <Link href="/login" className="text-[#00B4D8] hover:underline font-medium transition-colors">
                         Inicia sesión aquí
                     </Link>
                 </p>

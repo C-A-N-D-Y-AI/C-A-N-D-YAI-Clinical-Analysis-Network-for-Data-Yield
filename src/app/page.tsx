@@ -1,17 +1,25 @@
 export default function Home() {
   return (
     <>
-      <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-slate-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-black text-white">
-        <div className="text-center max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter"> Bienvenido a <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">RIWI .IA</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-400 mb-10 font-light leading-relaxed"> La plataforma definitiva para gestionar tus clases y proyectos con el poder de la inteligencia artificial.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <a href="/register" className="px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-gray-200 transition-all transform hover:scale-105"> Empezar ahora
-            </a>
-            <a href="/login" className="px-8 py-4 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-white/10 transition-all"> Iniciar sesión
-            </a>
+      <main className="min-h-screen flex items-center justify-center p-8 bg-[#FAF8F5]">
+        <div className="w-full max-w-4xl rounded-2xl bg-[#F3ECE3] border border-[#DCAE8A]/30 shadow-md shadow-[#152A47]/6 p-12">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-5xl md:text-6xl font-extrabold text-[#152A47] mb-4">Bienvenido a <span className="text-[#00B4D8]">CANDY</span></h1>
+              <p className="text-lg text-[#152A47]/80 mb-6">La plataforma que une datos clínicos y análisis con experiencia humana cálida. Potenciado por Agentes.</p>
+              <div className="flex gap-4 justify-center md:justify-start">
+                <a href="/register" className="px-6 py-3 bg-[#E07A5F] hover:bg-[#d66a54] text-white rounded-full font-semibold shadow-md shadow-[#E07A5F]/20 transform hover:scale-[1.02] transition-all">Empezar ahora</a>
+                <a href="/login" className="px-6 py-3 bg-transparent border border-[#00B4D8] text-[#00B4D8] rounded-full font-semibold hover:bg-[#00B4D8]/10 transition-all">Iniciar sesión</a>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="w-full h-52 md:h-64 rounded-xl bg-white shadow-inner border border-[#EAEAEA] flex items-center justify-center text-[#152A47]/70"> 
+                <div>
+                  <p className="text-sm text-[#152A47]/60">Visual placeholder</p>
+                  <h3 className="mt-2 text-xl font-bold text-[#152A47]">CANDY — Clinical Analysis Network</h3>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
