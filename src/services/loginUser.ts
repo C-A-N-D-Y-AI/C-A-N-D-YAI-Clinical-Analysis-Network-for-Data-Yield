@@ -3,7 +3,14 @@ import prisma from "@/lib/db";
 import { compareHashed } from "@/lib/hash";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 
-export async function LoginUser(user: User) {
+/**
+ * Autentica un usuario y genera sus tokens.
+ */
+export async function LoginUser(user: Partial<User>) {
+
+    if (!user.email || !user.password) {
+        throw new Error("Email y contraseña son requeridos");
+    }
 
     const validateUser = await prisma.user.findUnique({
         where: { email: user.email }
@@ -16,11 +23,12 @@ export async function LoginUser(user: User) {
     const validateHash = await compareHashed(user.password, validateUser.password);
     if (!validateHash) {
         throw new Error("Contraseña incorrecta");
-
     }
 
     const payload = {
-        email: user.email
+        id: validateUser.id,
+        email: validateUser.email,
+        role: validateUser.role
     }
 
     const accessToken = generateAccessToken(payload);
@@ -28,6 +36,11 @@ export async function LoginUser(user: User) {
 
     return {
         accessToken,
-        refreshToken
+        refreshToken,
+        user: {
+            id: validateUser.id,
+            email: validateUser.email,
+            role: validateUser.role
+        }
     }
 }
