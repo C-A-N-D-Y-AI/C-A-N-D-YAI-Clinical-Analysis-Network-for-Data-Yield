@@ -15,16 +15,16 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className="flex items-center justify-between px-6 py-3 bg-[#FAF8F5] text-[#152A47] shadow-sm border-b border-[#EAEAEA]">
-            <div className="text-lg font-extrabold tracking-wide">
-                CANDY <span className="text-[#00B4D8]">.</span>
+        <nav className="flex items-center justify-between px-6 py-3 bg-[#050A18] text-[#FFFFFF] shadow-md border-b border-[#1A263D]">
+            <div className="text-lg font-extrabold tracking-wide text-[#FFFFFF]">
+                CANDY <span className="text-[#0091DA]">.</span>
             </div>
 
             <div className="flex gap-4 items-center text-sm font-medium">
-                <Link href="/" className="text-[#152A47]/90 hover:underline">Inicio</Link>
-                <Link href="/login" className="px-3 py-1 rounded-full border border-[#00B4D8] text-[#00B4D8] hover:bg-[#00B4D8]/10 transition">Login</Link>
-                <Link href="/register" className="px-3 py-1 rounded-full bg-[#E07A5F] text-white hover:bg-[#d66a54] transition">Register</Link>
-                {isLogged && <Link href="/dashboard" className="px-3 py-1 rounded-full bg-[#152A47] text-white">Dashboard</Link>}
+                <Link href="/" className="text-[#A0AEC0] hover:text-[#FFFFFF] transition-colors">Inicio</Link>
+                <Link href="/login" className="px-3 py-1 rounded-full border border-[#1A263D] text-[#FFFFFF] hover:border-[#537FE7] hover:bg-[#1A263D]/50 transition">Acceder</Link>
+                <Link href="/register" className="px-3 py-1 rounded-full bg-[#0091DA] text-[#FFFFFF] hover:bg-[#007AB8] transition">REGISTER</Link>
+                {isLogged && <Link href="/dashboard" className="px-3 py-1 rounded-full bg-[#0D1525] border border-[#1A263D] text-[#FFFFFF] hover:border-[#0091DA] transition">Dashboard</Link>}
             </div>
         </nav>
     );
