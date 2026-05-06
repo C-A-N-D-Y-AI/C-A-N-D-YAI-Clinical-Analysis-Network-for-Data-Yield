@@ -1,0 +1,63 @@
+import Swal from 'sweetalert2';
+import { deleteUser } from '@/app/actions/user.actions';
+import { User } from '@/types/user';
+
+export function useUserManagement() {
+  const handleDelete = async (user: User) => {
+    // Validación de seguridad para evitar borrar admins fácilmente
+    if (user.role === 'ADMIN') {
+        Swal.fire({
+            title: 'Atención',
+            text: 'No es recomendable eliminar a otros administradores.',
+            icon: 'warning',
+            confirmButtonText: 'Entendido'
+        });
+    }
+
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: `Vas a eliminar permanentemente al usuario ${user.firstName} ${user.lastName}. Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#1A263D',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: '#0D1525',
+      color: '#FFFFFF'
+    });
+
+    if (!user.id) {
+        Swal.fire({ title: 'Error', text: 'El usuario no tiene un ID válido', icon: 'error' });
+        return;
+    }
+
+    if (result.isConfirmed) {
+      const response = await deleteUser(user.id);
+      
+      if (response.success) {
+        Swal.fire({
+          title: 'Eliminado',
+          text: 'El usuario ha sido eliminado correctamente.',
+          icon: 'success',
+          background: '#0D1525',
+          color: '#FFFFFF',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: response.error || 'Hubo un problema al eliminar.',
+          icon: 'error',
+          background: '#0D1525',
+          color: '#FFFFFF'
+        });
+      }
+    }
+  };
+
+  return {
+    handleDelete
+  };
+}
