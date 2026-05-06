@@ -15,6 +15,10 @@ export async function registerUser(user: User): Promise<void> {
         throw new Error("El usuario ya existe");
     }
 
+    if (!user.password) {
+        throw new Error("El password es requerido para registrarse");
+    }
+
     const hashed = await hashPassword(user.password);
 
     await prisma.user.create({
