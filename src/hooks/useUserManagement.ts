@@ -1,10 +1,28 @@
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { deleteUser } from '@/app/actions/user.actions';
 import { User } from '@/types/user';
 
 export function useUserManagement() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+
+  const openCreateModal = () => {
+    setUserToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (user: User) => {
+    setUserToEdit(user);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToEdit(null);
+  };
+
   const handleDelete = async (user: User) => {
-    // Validación de seguridad para evitar borrar admins fácilmente
     if (user.role === 'ADMIN') {
         Swal.fire({
             title: 'Atención',
@@ -58,6 +76,11 @@ export function useUserManagement() {
   };
 
   return {
+    isModalOpen,
+    userToEdit,
+    openCreateModal,
+    openEditModal,
+    closeModal,
     handleDelete
   };
 }
