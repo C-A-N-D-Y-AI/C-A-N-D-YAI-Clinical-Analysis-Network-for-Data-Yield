@@ -3,9 +3,10 @@ import Swal from 'sweetalert2';
 import { deleteUser } from '@/app/actions/user.actions';
 import { User } from '@/types/user';
 
-export function useUserManagement() {
+export function useUserManagement(users: User[] = []) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const openCreateModal = () => {
     setUserToEdit(null);
@@ -75,12 +76,27 @@ export function useUserManagement() {
     }
   };
 
+  // Lógica de filtrado separada de la vista
+  const filteredUsers = users.filter(user => {
+    if (!searchQuery) return true;
+    const searchLower = searchQuery.toLowerCase();
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+    return (
+      fullName.includes(searchLower) ||
+      user.email.toLowerCase().includes(searchLower) ||
+      (user.role || '').toLowerCase().includes(searchLower)
+    );
+  });
+
   return {
     isModalOpen,
     userToEdit,
     openCreateModal,
     openEditModal,
     closeModal,
-    handleDelete
+    handleDelete,
+    searchQuery,
+    setSearchQuery,
+    filteredUsers
   };
 }

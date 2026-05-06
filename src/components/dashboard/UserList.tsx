@@ -15,31 +15,53 @@ export function UserList({ users }: UserListProps) {
     userToEdit, 
     openCreateModal, 
     openEditModal, 
-    closeModal 
-  } = useUserManagement();
+    closeModal,
+    searchQuery,
+    setSearchQuery,
+    filteredUsers
+  } = useUserManagement(users);
 
   return (
     <>
-      <div className="w-full bg-[#0D1525] rounded-2xl border border-[#1A263D] overflow-hidden shadow-md">
-        <div className="p-6 border-b border-[#1A263D] flex justify-between items-center bg-[#050A18]/50">
+      <div className="w-full bg-[#0D1525] rounded-2xl border border-[#1A263D] overflow-hidden shadow-md flex flex-col">
+        <div className="p-6 border-b border-[#1A263D] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#050A18]/50">
           <h2 className="text-xl font-bold text-[#FFFFFF] tracking-tight">Gestión de Usuarios</h2>
-          <div className="flex items-center gap-4">
-            <span className="bg-[#0091DA]/10 text-[#0091DA] py-1 px-3 rounded-full text-xs font-bold border border-[#0091DA]/20">
-              {users.length} Usuarios
-            </span>
-            <button 
-              onClick={openCreateModal}
-              className="bg-[#0091DA] hover:bg-[#007AB8] text-[#FFFFFF] px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 active:scale-95"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Nuevo Usuario
-            </button>
+          
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto">
+            {/* Buscador */}
+            <div className="relative w-full md:w-64">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-4 w-4 text-[#A0AEC0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar usuario..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#050A18] border border-[#1A263D] py-2 pl-9 pr-3 rounded-xl text-[#FFFFFF] placeholder:text-[#A0AEC0]/50 focus:outline-none focus:ring-2 focus:ring-[#0091DA]/40 focus:border-[#0091DA] transition-all text-sm"
+              />
+            </div>
+
+            <div className="flex items-center justify-between md:justify-start gap-4">
+              <span className="bg-[#0091DA]/10 text-[#0091DA] py-1.5 px-3 rounded-full text-xs font-bold border border-[#0091DA]/20">
+                {filteredUsers.length} Usuarios
+              </span>
+              <button 
+                onClick={openCreateModal}
+                className="bg-[#0091DA] hover:bg-[#007AB8] text-[#FFFFFF] px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap shadow-lg shadow-[#0091DA]/20"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Nuevo Usuario
+              </button>
+            </div>
           </div>
         </div>
         
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-[#050A18]/30 text-[#A0AEC0] text-xs uppercase tracking-wider">
@@ -52,14 +74,17 @@ export function UserList({ users }: UserListProps) {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {users.length === 0 ? (
+              {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-[#A0AEC0]">
-                    No se encontraron usuarios en la base de datos.
+                  <td colSpan={6} className="p-8 text-center text-[#A0AEC0] flex flex-col items-center justify-center gap-3">
+                    <svg className="w-12 h-12 text-[#1A263D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>No se encontraron usuarios que coincidan con la búsqueda.</span>
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
+                filteredUsers.map((user) => (
                   <tr 
                     key={user.id} 
                     className="border-b border-[#1A263D]/50 hover:bg-[#1A263D]/30 transition-colors"
@@ -100,7 +125,7 @@ export function UserList({ users }: UserListProps) {
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => openEditModal(user)}
-                          className="text-[#0091DA] hover:text-white bg-[#0091DA]/10 hover:bg-[#0091DA] border border-[#0091DA]/20 hover:border-[#0091DA] px-3 py-1 rounded-md transition-all text-xs font-medium flex items-center gap-1"
+                          className="text-[#0091DA] hover:text-white bg-[#0091DA]/10 hover:bg-[#0091DA] border border-[#0091DA]/20 hover:border-[#0091DA] px-3 py-1.5 rounded-md transition-all text-xs font-medium flex items-center gap-1"
                           title="Editar usuario"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,7 +135,7 @@ export function UserList({ users }: UserListProps) {
                         </button>
                         <button 
                           onClick={() => handleDelete(user)}
-                          className="text-red-400 hover:text-white bg-red-400/10 hover:bg-red-500 border border-red-400/20 hover:border-red-500 px-3 py-1 rounded-md transition-all text-xs font-medium flex items-center gap-1"
+                          className="text-red-400 hover:text-white bg-red-400/10 hover:bg-red-500 border border-red-400/20 hover:border-red-500 px-3 py-1.5 rounded-md transition-all text-xs font-medium flex items-center gap-1"
                           title="Eliminar usuario"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,7 +158,7 @@ export function UserList({ users }: UserListProps) {
         onClose={closeModal}
         userToEdit={userToEdit}
         onSuccess={() => {
-          // Ya revalidamos en el server action, la página se recargará sola con los nuevos datos
+          // Revalidado en el server
         }}
       />
     </>

@@ -55,27 +55,20 @@ export async function updateUser(userId: number, data: Partial<User>) {
       firstName?: string;
       lastName?: string;
       email?: string;
-      role?: string;
+      role?: "USER" | "ADMIN";
       isActive?: boolean;
       password?: string;
     } = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      role: data.role,
+      role: data.role as "USER" | "ADMIN" | undefined,
       isActive: data.isActive
     };
 
     if (data.password) {
       updateData.password = await hashPassword(data.password);
     }
-
-    // Clean undefined values
-    Object.keys(updateData).forEach(key => {
-      if (updateData[key] === undefined) {
-        delete updateData[key];
-      }
-    });
 
     await prisma.user.update({
       where: { id: userId },
