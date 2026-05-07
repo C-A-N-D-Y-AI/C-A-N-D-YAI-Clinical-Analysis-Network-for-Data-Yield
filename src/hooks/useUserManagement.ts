@@ -25,12 +25,15 @@ export function useUserManagement(users: User[] = []) {
 
   const handleDelete = async (user: User) => {
     if (user.role === 'ADMIN') {
-        Swal.fire({
-            title: 'Atención',
-            text: 'No es recomendable eliminar a otros administradores.',
+        await Swal.fire({
+            title: 'Acción no permitida',
+            text: 'No está permitido eliminar a otros administradores del sistema.',
             icon: 'warning',
-            confirmButtonText: 'Entendido'
+            confirmButtonText: 'Entendido',
+            background: '#0D1525',
+            color: '#FFFFFF',
         });
+        return; // Fix #16: detenemos aquí, no mostramos el segundo popup
     }
 
     const result = await Swal.fire({

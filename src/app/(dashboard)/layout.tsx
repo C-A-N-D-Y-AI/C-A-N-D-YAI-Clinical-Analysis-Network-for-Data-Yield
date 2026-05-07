@@ -2,10 +2,11 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { validateAccessToken } from "@/lib/jwt";
+import DashboardNavbar from "./_components/DashboardNavbar";
 
 export const metadata: Metadata = {
-    title: "CANDY - Dashboard",
-    description: "Panel de control del sistema de análisis clínico",
+    title: "C.A.N.D.Y — Dashboard",
+    description: "Panel de control del sistema de análisis clínico.",
 };
 
 export default async function DashboardLayout({
@@ -13,7 +14,6 @@ export default async function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    // Proteger toda la ruta de (dashboard)
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
 
@@ -28,13 +28,13 @@ export default async function DashboardLayout({
     }
 
     if (user.role !== "ADMIN") {
-        redirect("/"); // Si no es admin, lo mandamos al inicio
+        redirect("/");
     }
 
     return (
-        <div className="min-h-[calc(100vh-65px)] bg-[#050A18] text-[#FFFFFF] font-sans">
-            {/* Aquí podrías añadir una barra lateral o navegación específica de dashboard */}
-            <main className="p-4 md:p-8 max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#050A18] text-[#FFFFFF] font-sans flex flex-col">
+            <DashboardNavbar user={user} />
+            <main className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1">
                 {children}
             </main>
         </div>

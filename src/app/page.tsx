@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <>
-      <main className="min-h-screen flex items-center justify-center p-8 bg-[#050A18]">
+      <main className="min-h-[calc(100vh-73px)] flex items-center justify-center p-8 bg-[#050A18]">
         <div className="w-full max-w-4xl rounded-2xl bg-[#0D1525] border border-[#1A263D] shadow-2xl shadow-black/50 p-12">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1 text-center md:text-left">
