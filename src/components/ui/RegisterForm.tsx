@@ -35,7 +35,6 @@ export default function RegisterForm() {
                 showConfirmButton: false,
             });
 
-            localStorage.setItem("usuario-registrado", JSON.stringify({ email }));
             router.push('/login');
 
         } catch (err: unknown) {

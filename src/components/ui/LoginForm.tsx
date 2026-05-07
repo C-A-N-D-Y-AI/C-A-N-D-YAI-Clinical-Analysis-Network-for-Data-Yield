@@ -32,7 +32,6 @@ export default function LoginForm() {
                 showConfirmButton: false,
             });
 
-            localStorage.setItem("usuario-logueado", JSON.stringify({ email }));
             router.push('/dashboard');
 
         } catch (err: unknown) {

@@ -3,7 +3,7 @@ import React from 'react';
 interface StatCardProps {
   title: string;
   value: string | number;
-  colorScheme: 'blue' | 'purple' | 'green';
+  colorScheme: 'blue' | 'purple' | 'green' | 'indigo' | 'pink';
 }
 
 export function StatCard({ title, value, colorScheme }: StatCardProps) {
@@ -23,6 +23,16 @@ export function StatCard({ title, value, colorScheme }: StatCardProps) {
         return {
           hoverBorder: 'hover:border-[#00C2A8]',
           hoverText: 'group-hover:text-[#00C2A8]',
+        };
+      case 'indigo':
+        return {
+          hoverBorder: 'hover:border-indigo-500',
+          hoverText: 'group-hover:text-indigo-400',
+        };
+      case 'pink':
+        return {
+          hoverBorder: 'hover:border-pink-500',
+          hoverText: 'group-hover:text-pink-400',
         };
       default:
         return {

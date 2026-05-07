@@ -88,10 +88,11 @@ export function UserFormModal({ isOpen, onClose, userToEdit, onSuccess }: UserFo
       } else {
         throw new Error(response.error);
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Hubo un problema al guardar el usuario';
       Swal.fire({
         title: 'Error',
-        text: error.message || 'Hubo un problema al guardar el usuario',
+        text: message,
         icon: 'error',
         background: '#0D1525',
         color: '#FFFFFF'

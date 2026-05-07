@@ -57,7 +57,7 @@ export async function POST() {
 
         return response;
 
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             { message: "Error al refrescar el token" },
             { status: 500 }

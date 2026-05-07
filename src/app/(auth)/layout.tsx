@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Register y login de mi app",
-    description: "quiero que encuentren esto",
+    title: "C.A.N.D.Y — Autenticación",
+    description: "Inicia sesión o regístrate en la plataforma CANDY.",
 };
 
-export default function authLayout({
+export default function AuthLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -27,7 +27,7 @@ export default function authLayout({
                 </div>
                 {children}
                 <p className="text-center mt-6 text-sm text-[#A0AEC0] font-light">
-                    &copy; 2026 CANDY - Potenciado por Agentes
+                    &copy; 2026 CANDY — Potenciado por Agentes
                 </p>
             </div>
         </div>
