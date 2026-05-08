@@ -180,11 +180,11 @@ const Index = () => {
                   className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
                     m.role === "user"
                       ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-tr-md"
-                      : "bg-white border border-slate-200 rounded-tl-md"
+                      : "bg-white border border-slate-200 rounded-tl-md text-slate-900"
                   }`}
                 >
                   {m.role === "assistant" ? (
-                    <div className="prose prose-sm max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-800 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-800 prose-strong:text-slate-900 prose-strong:font-semibold">
+                    <div className="text-slate-900 prose-sm max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-800 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-800 prose-strong:text-slate-900 prose-strong:font-semibold">
                       <ReactMarkdown>{m.content}</ReactMarkdown>
                     </div>
                   ) : (
