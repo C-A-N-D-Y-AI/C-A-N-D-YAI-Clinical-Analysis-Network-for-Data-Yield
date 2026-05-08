@@ -184,7 +184,7 @@ const Index = () => {
                   }`}
                 >
                   {m.role === "assistant" ? (
-                    <div className="prose prose-sm prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-700">
+                    <div className="prose prose-sm max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-800 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-800 prose-strong:text-slate-900 prose-strong:font-semibold">
                       <ReactMarkdown>{m.content}</ReactMarkdown>
                     </div>
                   ) : (
