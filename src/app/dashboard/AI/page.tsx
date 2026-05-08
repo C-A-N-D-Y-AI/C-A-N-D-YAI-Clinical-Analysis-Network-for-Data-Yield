@@ -6,7 +6,6 @@ import { Paperclip, Send, Sparkles, Loader2, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import HumanSilhouette from "@/components/HumanSilhouette";
 import { parsePdfToJson } from "@/lib/pdf-parser";
 
 type Message = {
@@ -38,22 +37,6 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number; active: boolean }>({
-    x: 50,
-    y: 50,
-    active: false,
-  });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMousePosition({ x, y, active: true });
-  };
-
-  const handleMouseLeave = () => {
-    setMousePosition(prev => ({ ...prev, active: false }));
-  };
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -134,147 +117,186 @@ const Index = () => {
   };
 
   return (
-    <main 
-      className="relative h-screen overflow-hidden bg-gradient-to-b from-blue-50 via-slate-50 to-white"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* Decorative blobs - subtle backdrop */}
-      <div className="pointer-events-none absolute -left-40 top-32 h-80 w-80 rounded-full bg-blue-200/20 blur-3xl opacity-60" />
-      <div className="pointer-events-none absolute -right-40 -top-20 h-80 w-80 rounded-full bg-cyan-200/20 blur-3xl opacity-60" />
-
-      <div className="relative z-10 mx-auto flex h-full max-w-3xl flex-col px-4 py-6">
-        {/* Header */}
-        <header className="mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold leading-tight text-slate-900">Asistente Médico IA</h1>
-              <p className="text-xs text-slate-500 font-medium">Análisis inteligente de exámenes</p>
-            </div>
-          </div>
-          <span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 md:inline border border-emerald-200">
-            ● En línea
-          </span>
-        </header>
-
-        {/* Chat messages */}
-        <div
-          ref={scrollRef}
-          className="relative flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-        >
-          <div className="relative z-10 space-y-4">
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}
-            >
-              {m.role === "assistant" && (
-                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
-                  <Sparkles className="h-4 w-4" />
-                </div>
-              )}
-              <div
-                className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-all ${
-                  m.role === "user"
-                    ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-tr-sm"
-                    : "bg-slate-100 text-slate-900 border border-slate-200 rounded-tl-sm"
-                }`}
-              >
-                {m.role === "assistant" ? (
-                  <div className="prose prose-sm prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-700">
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
-                  </div>
-                ) : (
-                  <p className="text-sm font-medium">{m.content}</p>
-                )}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Header Section */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-cyan-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900 tracking-tight">CANDY AI</h1>
+                <p className="text-sm text-slate-600 font-medium">Análisis Médico Inteligente</p>
               </div>
             </div>
-          ))}
-
-          {loading && (
-            <div className="flex gap-3">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-slate-100 px-4 py-3 shadow-sm">
-                <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                  Analizando tu examen...
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-semibold text-emerald-700">Sistema Activo</span>
               </div>
             </div>
-          )}
           </div>
-        </div>
-
-        {/* Input bar */}
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-          {file && (
-            <div className="mb-3 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm">
-              <FileText className="h-4 w-4 text-blue-600 flex-shrink-0" />
-              <span className="flex-1 truncate font-medium text-slate-900">{file.name}</span>
-              <span className="text-xs text-slate-500 whitespace-nowrap">{(file.size / 1024).toFixed(0)} KB</span>
-              <button
-                onClick={() => setFile(null)}
-                className="rounded-full p-1 transition-colors hover:bg-red-100 hover:text-red-600 text-slate-600"
-                aria-label="Quitar archivo"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*,application/pdf"
-              className="hidden"
-              onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => inputRef.current?.click()}
-              disabled={loading}
-              className="shrink-0 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600"
-              aria-label="Adjuntar examen"
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send();
-                }
-              }}
-              placeholder={file ? "Añade una pregunta (opcional)..." : "Escribe tu pregunta o adjunta un examen..."}
-              disabled={loading}
-              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-            <Button
-              type="button"
-              onClick={send}
-              disabled={(!file && !text.trim()) || loading}
-              className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md hover:shadow-lg hover:opacity-90 transition-all disabled:opacity-50"
-              aria-label="Enviar"
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </Button>
-          </div>
-          <p className="mt-2.5 px-1 text-xs text-slate-500 font-medium">
-            ⚕️ Explicaciones médicas. Consulta siempre a un profesional de salud.
-          </p>
         </div>
       </div>
-    </main>
+
+      {/* Main Chat Container */}
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 overflow-hidden">
+          {/* Chat Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h2 className="text-white font-semibold">Asistente Médico IA</h2>
+                <p className="text-blue-100 text-sm">Análisis inteligente de exámenes clínicos</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages Area */}
+          <div
+            ref={scrollRef}
+            className="h-[500px] overflow-y-auto px-6 py-6 space-y-6 bg-gradient-to-b from-slate-50/50 to-white"
+          >
+            {messages.map((m, index) => (
+              <div
+                key={m.id}
+                className={`flex gap-4 animate-in slide-in-from-bottom-2 duration-500 ${
+                  m.role === "user" ? "justify-end" : "justify-start"
+                }`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {m.role === "assistant" && (
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 flex-shrink-0 mt-1">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                )}
+
+                <div
+                  className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
+                    m.role === "user"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-tr-md"
+                      : "bg-white border border-slate-200 rounded-tl-md"
+                  }`}
+                >
+                  {m.role === "assistant" ? (
+                    <div className="prose prose-sm prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:my-2 prose-li:text-slate-700">
+                      <ReactMarkdown>{m.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium">{m.content}</p>
+                  )}
+                </div>
+
+                {m.role === "user" && (
+                  <div className="w-8 h-8 bg-gradient-to-br from-slate-400 to-slate-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 mt-1">
+                    <div className="w-4 h-4 bg-white rounded-full"></div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {loading && (
+              <div className="flex gap-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 flex-shrink-0 mt-1">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
+                  <div className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                    <span>Analizando tu examen...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input Section */}
+          <div className="border-t border-slate-200 bg-slate-50/50 px-6 py-4">
+            {file && (
+              <div className="mb-4 flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3 shadow-sm">
+                <FileText className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 truncate">{file.name}</p>
+                  <p className="text-xs text-slate-500">{(file.size / 1024).toFixed(0)} KB</p>
+                </div>
+                <button
+                  onClick={() => setFile(null)}
+                  className="w-6 h-6 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center transition-colors"
+                  aria-label="Remover archivo"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
+            <div className="flex items-end gap-3">
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => inputRef.current?.click()}
+                disabled={loading}
+                className="w-11 h-11 rounded-xl border-slate-300 hover:bg-slate-100 hover:border-blue-400 transition-all"
+                aria-label="Adjuntar examen"
+              >
+                <Paperclip className="w-4 h-4 text-slate-600" />
+              </Button>
+
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      send();
+                    }
+                  }}
+                  placeholder={file ? "Añade una pregunta específica..." : "Describe tu consulta médica o adjunta un examen..."}
+                  disabled={loading}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm hover:shadow-md"
+                />
+              </div>
+
+              <Button
+                type="button"
+                onClick={send}
+                disabled={(!file && !text.trim()) || loading}
+                className="w-11 h-11 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Enviar mensaje"
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </Button>
+            </div>
+
+            <div className="mt-3 flex items-center justify-center">
+              <p className="text-xs text-slate-500 font-medium flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                Información médica orientativa • Consulta siempre a un profesional de salud
+                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
