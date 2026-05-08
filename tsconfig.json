@@ -25,21 +25,26 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@prisma/client": [
-        "./src/generated/prisma"
       ]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/app/**/*.ts",
+    "src/app/**/*.tsx",
+    "src/components/HumanSilhouette.tsx",
+    "src/integrations/**/*.ts",
+    "src/lib/pdf-parser.ts",
+    "src/lib/prisma.ts",
+    "src/proxy.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next/dev",
+    "src/supabase/functions",
+    "src/test"
   ]
 }

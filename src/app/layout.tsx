@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
 
 export const metadata: Metadata = {
-  title: "C.A.N.D.Y — Clinical Analysis Network for Data Yield",
-  description: "Plataforma de análisis clínico potenciada por inteligencia artificial.",
+  title: "C.A.N.D.Y",
+  description: "Plataforma centralizada de Ayuda clínica",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body>
-        <Navbar />
+      <body className="antialiased">
         {children}
       </body>
     </html>

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,32 +7,40 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  firstName  String
-  lastName   String
-  email      String    @unique
-  password   String
-  role       Role      @default(USER)
-  isActive   Boolean   @default(true)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  name      String?
+  role      Role       @default(USER)
+  status    String     @default("active")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  firstName String     @default("")
+  isActive  Boolean    @default(true)
+  lastName  String     @default("")
+  documents Document[]
+  sessions  Session[]
+}
 
-  sessions   Session[]
+model Document {
+  id        String   @id @default(cuid())
+  name      String
+  size      Int
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Session {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
-  USER
   ADMIN
+  USER
 }
-
-
- 

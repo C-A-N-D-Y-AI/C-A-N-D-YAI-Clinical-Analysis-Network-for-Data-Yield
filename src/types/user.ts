@@ -1,10 +1,12 @@
 export interface User {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password?: string; // Opcional porque no se envía al frontend
-    role?: "USER" | "ADMIN";
-    isActive?: boolean;
-    createdAt?: Date;
+  id?: number;
+  firstName: string;
+  lastName: string;
+  name?: string | null;
+  email: string;
+  password?: string;
+  role?: "USER" | "ADMIN";
+  isActive?: boolean;
+  status?: string;
+  createdAt?: Date;
 }

@@ -1,108 +1,113 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { validateAccessToken } from './lib/jwt';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
-/**
- * Mapa en memoria para Rate Limiting.
- * Clave: IP del cliente. Valor: { count, resetAt }
- * Nota: Para deployments multi-instancia usar Redis en su lugar.
- */
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-const RATE_LIMIT_MAX = 10;          // Máximo 10 intentos
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // Ventana de 15 minutos
-
-function getRateLimitedResponse() {
-    return NextResponse.json(
-        { message: "Demasiados intentos. Espera 15 minutos e inténtalo de nuevo." },
-        {
-            status: 429,
-            headers: { "Retry-After": "900" },
-        }
-    );
+interface JWTPayload {
+  userId: number;
+  role: "ADMIN" | "User";
 }
 
-function checkRateLimit(ip: string): boolean {
-    const now = Date.now();
-    const entry = rateLimitMap.get(ip);
+const ROUTE_CONFIG = {
+  authPages: ["/login", "/register"],
+  protectedPages: ["/dashboard"],
+  adminPages: ["/dashboard/admin"],
+  publicApiRoutes: [
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/refresh",
+  ],
+  protectedApiRoutes: [
+    "/api/auth/logout",
+    "/api/auth/me",
+    "/api/document",
+    "/api/users/update",
+    "/api/users/delete-everything",
+  ],
+} as const;
 
-    if (!entry || now > entry.resetAt) {
-        // Primera solicitud o ventana expirada: reiniciar contador
-        rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-        return true; // Permitido
-    }
-
-    if (entry.count >= RATE_LIMIT_MAX) {
-        return false; // Bloqueado
-    }
-
-    // Incrementar contador
-    entry.count++;
-    return true; // Permitido
+function matchesAny(path: string, routes: readonly string[]): boolean {
+  return routes.some((route) => path.startsWith(route));
 }
 
-/**
- * Proxy de Next.js 16 para:
- * 1. Rate limiting en rutas de autenticación
- * 2. Protección de rutas API que requieren autenticación
- */
-export function proxy(req: NextRequest) {
-    const { pathname } = req.nextUrl;
-    const method = req.method;
+function apiUnauthorized(message: string, status: 401 | 403) {
+  return NextResponse.json({ error: message }, { status });
+}
 
-    // ─── Rate Limiting en rutas de Auth ───────────────────────────────────────
-    const isAuthRoute = pathname.startsWith('/api/auth/login') || 
-                        pathname.startsWith('/api/auth/register');
+export async function proxy(request: NextRequest) {
+  const token = request.cookies.get("accessToken")?.value;
+  const { pathname } = request.nextUrl;
+  const pathLower = pathname.toLowerCase();
 
-    if (isAuthRoute && method === 'POST') {
-        const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-            ?? req.headers.get('x-real-ip')
-            ?? 'anonymous';
+  const isApiRoute = pathLower.startsWith("/api/");
 
-        if (!checkRateLimit(ip)) {
-            return getRateLimitedResponse();
-        }
-    }
+  const isPublicApiRoute = matchesAny(pathLower, ROUTE_CONFIG.publicApiRoutes);
+  const isProtectedApiRoute = matchesAny(pathLower, ROUTE_CONFIG.protectedApiRoutes);
+  const isAdminApiRoute =
+    pathLower === "/api/users" || /^\/api\/users\/\d+$/.test(pathLower);
 
-    // ─── Protección de rutas API privadas ─────────────────────────────────────
-    if (pathname.startsWith('/api/agents') || pathname.startsWith('/api/admin')) {
-        let token = req.cookies.get('accessToken')?.value;
+  const isAuthPage = ROUTE_CONFIG.authPages.some((p) => pathLower === p);
+  const isProtectedPage = matchesAny(pathLower, ROUTE_CONFIG.protectedPages);
+  const isAdminPage = matchesAny(pathLower, ROUTE_CONFIG.adminPages);
 
-        if (!token) {
-            const authHeader = req.headers.get('authorization');
-            token = authHeader?.split(' ')[1];
-        }
-
-        if (!token) {
-            return NextResponse.json({ message: 'No autorizado: Falta token' }, { status: 401 });
-        }
-
-        const user = validateAccessToken(token);
-        if (!user) {
-            return NextResponse.json({ message: 'Sesión expirada o token inválido' }, { status: 401 });
-        }
-
-        const isWriteAction = ['POST', 'PUT', 'DELETE'].includes(method);
-
-        if (pathname.startsWith('/api/agents') && isWriteAction && user.role !== 'ADMIN') {
-            return NextResponse.json({ message: 'Acceso restringido a administradores' }, { status: 403 });
-        }
-
-        const requestHeaders = new Headers(req.headers);
-        requestHeaders.set('x-user-id', user.id.toString());
-        requestHeaders.set('x-user-role', user.role);
-
-        return NextResponse.next({ request: { headers: requestHeaders } });
-    }
-
+  if (isApiRoute && isPublicApiRoute) {
     return NextResponse.next();
+  }
+
+  if (isApiRoute && (isAdminApiRoute || isProtectedApiRoute)) {
+    if (!token) {
+      return apiUnauthorized("No autenticado", 401);
+    }
+
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const { payload } = await jwtVerify(token, secret);
+      const decoded = payload as unknown as JWTPayload;
+
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-user-id", String(decoded.userId));
+      requestHeaders.set("x-user-role", decoded.role);
+
+      return NextResponse.next({ request: { headers: requestHeaders } });
+    } catch {
+      const response = apiUnauthorized("Token inválido o expirado", 401);
+      response.cookies.delete("accessToken");
+      return response;
+    }
+  }
+
+  if (!token && isProtectedPage) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (token) {
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const { payload } = await jwtVerify(token, secret);
+      const decoded = payload as unknown as JWTPayload;
+
+      if (isAuthPage) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+
+      if (isAdminPage && decoded.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+    } catch {
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.delete("accessToken");
+      return response;
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: [
-        '/api/auth/login',
-        '/api/auth/register',
-        '/api/agents/:path*',
-        '/api/admin/:path*',
-    ],
+  matcher: [
+    "/dashboard/:path*",
+    "/login",
+    "/register",
+    "/unauthorized",
+    "/api/:path*",
+  ],
 };
