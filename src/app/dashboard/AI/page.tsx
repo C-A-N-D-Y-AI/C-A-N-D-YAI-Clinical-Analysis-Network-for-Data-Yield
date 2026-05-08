@@ -135,40 +135,35 @@ const Index = () => {
 
   return (
     <main 
-      className="relative h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50"
+      className="relative h-screen overflow-hidden bg-gradient-to-b from-blue-50 via-slate-50 to-white"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Decorative blobs */}
-      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-cyan-200/30 blur-3xl" />
-
-      {/* Silueta humana decorativa de fondo */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <HumanSilhouette mousePosition={mousePosition} />
-      </div>
+      {/* Decorative blobs - subtle backdrop */}
+      <div className="pointer-events-none absolute -left-40 top-32 h-80 w-80 rounded-full bg-blue-200/20 blur-3xl opacity-60" />
+      <div className="pointer-events-none absolute -right-40 -top-20 h-80 w-80 rounded-full bg-cyan-200/20 blur-3xl opacity-60" />
 
       <div className="relative z-10 mx-auto flex h-full max-w-3xl flex-col px-4 py-6">
         {/* Header */}
-        <header className="mb-4 flex items-center justify-between rounded-2xl border border-blue-200 bg-white/80 px-5 py-3 backdrop-blur-xl shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+        <header className="mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-4">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-base font-bold leading-tight text-slate-900">Asistente Médico IA</h1>
-              <p className="text-xs text-slate-600">Entiende tus exámenes en lenguaje humano</p>
+              <h1 className="text-lg font-bold leading-tight text-slate-900">Asistente Médico IA</h1>
+              <p className="text-xs text-slate-500 font-medium">Análisis inteligente de exámenes</p>
             </div>
           </div>
-          <span className="hidden rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 md:inline">
-            En línea
+          <span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 md:inline border border-emerald-200">
+            ● En línea
           </span>
         </header>
 
         {/* Chat messages */}
         <div
           ref={scrollRef}
-          className="relative flex-1 space-y-4 overflow-y-auto rounded-2xl border border-blue-200 bg-white/60 p-4 backdrop-blur-md md:p-6"
+          className="relative flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
         >
           <div className="relative z-10 space-y-4">
           {messages.map((m) => (
@@ -177,15 +172,15 @@ const Index = () => {
               className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}
             >
               {m.role === "assistant" && (
-                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
                   <Sparkles className="h-4 w-4" />
                 </div>
               )}
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm backdrop-blur-md ${
+                className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-all ${
                   m.role === "user"
-                    ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-tr-sm"
-                    : "bg-blue-50 text-slate-900 border border-blue-200 rounded-tl-sm"
+                    ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-tr-sm"
+                    : "bg-slate-100 text-slate-900 border border-slate-200 rounded-tl-sm"
                 }`}
               >
                 {m.role === "assistant" ? (
@@ -201,13 +196,13 @@ const Index = () => {
 
           {loading && (
             <div className="flex gap-3">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg">
                 <Sparkles className="h-4 w-4" />
               </div>
-              <div className="rounded-2xl rounded-tl-sm border border-blue-200 bg-blue-50 px-4 py-3 shadow-sm backdrop-blur-md">
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Leyendo tu examen...
+              <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-slate-100 px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                  Analizando tu examen...
                 </div>
               </div>
             </div>
@@ -216,15 +211,15 @@ const Index = () => {
         </div>
 
         {/* Input bar */}
-        <div className="mt-4 rounded-2xl border border-blue-200 bg-white/80 p-3 shadow-sm backdrop-blur-xl">
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
           {file && (
-            <div className="mb-3 flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm">
-              <FileText className="h-4 w-4 text-blue-600" />
+            <div className="mb-3 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm">
+              <FileText className="h-4 w-4 text-blue-600 flex-shrink-0" />
               <span className="flex-1 truncate font-medium text-slate-900">{file.name}</span>
-              <span className="text-xs text-slate-600">{(file.size / 1024).toFixed(0)} KB</span>
+              <span className="text-xs text-slate-500 whitespace-nowrap">{(file.size / 1024).toFixed(0)} KB</span>
               <button
                 onClick={() => setFile(null)}
-                className="rounded-full p-1 transition-smooth hover:bg-red-100 hover:text-red-600"
+                className="rounded-full p-1 transition-colors hover:bg-red-100 hover:text-red-600 text-slate-600"
                 aria-label="Quitar archivo"
               >
                 <X className="h-4 w-4" />
@@ -245,7 +240,7 @@ const Index = () => {
               size="icon"
               onClick={() => inputRef.current?.click()}
               disabled={loading}
-              className="shrink-0 rounded-xl border-blue-200 text-blue-600 hover:bg-blue-50"
+              className="shrink-0 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600"
               aria-label="Adjuntar examen"
             >
               <Paperclip className="h-4 w-4" />
@@ -260,22 +255,22 @@ const Index = () => {
                   send();
                 }
               }}
-              placeholder={file ? "Añade un mensaje (opcional)..." : "Escribe tu mensaje o adjunta un examen..."}
+              placeholder={file ? "Añade una pregunta (opcional)..." : "Escribe tu pregunta o adjunta un examen..."}
               disabled={loading}
-              className="flex-1 rounded-xl border border-blue-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             <Button
               type="button"
               onClick={send}
               disabled={(!file && !text.trim()) || loading}
-              className="shrink-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md hover:opacity-90"
+              className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md hover:shadow-lg hover:opacity-90 transition-all disabled:opacity-50"
               aria-label="Enviar"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
-          <p className="mt-2 px-1 text-[11px] text-slate-600">
-            ⚕️ La IA orienta, pero no reemplaza al médico.
+          <p className="mt-2.5 px-1 text-xs text-slate-500 font-medium">
+            ⚕️ Explicaciones médicas. Consulta siempre a un profesional de salud.
           </p>
         </div>
       </div>
