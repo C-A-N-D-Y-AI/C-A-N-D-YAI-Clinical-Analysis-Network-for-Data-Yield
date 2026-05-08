@@ -7,8 +7,8 @@ import { callGemini, callOllama } from "./providers.ts";
 import { buildChunks, buildDocumentSections, formatRagContext, retrieveRelevantChunks } from "./rag.ts";
 import type { AnalyzeRequest, ChatMessage, DoclingDocument } from "./types.ts";
 
-const toSafeHistory = (history: AnalyzeRequest["history"]) =>
-  Array.isArray(history)
+const toSafeHistory = (history: AnalyzeRequest["history"]) => {
+  const validMessages = Array.isArray(history)
     ? history
         .filter((message) => message?.role === "user" || message?.role === "assistant")
         .map((message) => ({
@@ -16,6 +16,9 @@ const toSafeHistory = (history: AnalyzeRequest["history"]) =>
           content: String(message.content ?? ""),
         }))
     : [];
+  // Keep only last 6 messages to prevent context dilution
+  return validMessages.slice(-6);
+};
 
 const getUserText = ({ fileBase64, parsedDocument, text, fileName }: AnalyzeRequest) =>
   fileBase64 || parsedDocument
