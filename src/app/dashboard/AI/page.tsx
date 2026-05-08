@@ -145,14 +145,14 @@ const Index = () => {
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 overflow-hidden">
           {/* Chat Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+          <div className="bg-gradient-to-r from-sky-100 to-cyan-100 px-6 py-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                <Sparkles className="w-4 h-4 text-sky-600" />
               </div>
               <div>
-                <h2 className="text-white font-semibold">Asistente Médico IA</h2>
-                <p className="text-blue-100 text-sm">Análisis inteligente de exámenes clínicos</p>
+                <h2 className="text-slate-900 font-semibold">Asistente Médico IA</h2>
+                <p className="text-slate-500 text-sm">Análisis inteligente de exámenes clínicos</p>
               </div>
             </div>
           </div>

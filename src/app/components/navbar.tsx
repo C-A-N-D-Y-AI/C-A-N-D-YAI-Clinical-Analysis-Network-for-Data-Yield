@@ -59,8 +59,7 @@ export default function Navbar({ user }: NavbarProps) {
   ];
 
   return (
-    <nav className="relative z-50 flex items-center justify-between bg-[#020617] px-8 py-4 backdrop-blur-xl border-none shadow-none outline-none">
-      
+    <nav className="relative z-50 flex items-center justify-between bg-white/90 px-8 py-4 border-b border-slate-200 shadow-sm backdrop-blur-xl">
       <div className="flex items-center gap-10">
         {/* LOGO IZQUIERDA - MINI 3D CROSS */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
@@ -101,22 +100,22 @@ export default function Navbar({ user }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 className={`group relative flex h-12 w-12 items-center justify-center rounded-[1.25rem] border transition-all duration-500 ${
-                  isActive 
-                    ? "border-sky-500/40 bg-sky-500/10 shadow-[0_0_20px_rgba(14,165,233,0.2)]" 
-                    : "border-white/5 bg-white/[0.03] hover:border-white/20"
+                  isActive
+                    ? "border-sky-200 bg-sky-100 shadow-[0_0_20px_rgba(56,189,248,0.15)]"
+                    : "border-slate-200 bg-slate-50 hover:border-slate-300"
                 }`}
               >
-                <svg 
+                <svg
                   className={`h-6 w-6 transition-all duration-300 ${
-                    isActive ? "text-sky-400 drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]" : "text-slate-500 group-hover:text-sky-300"
-                  }`} 
-                  fill="currentColor" 
+                    isActive ? "text-sky-600 drop-shadow-[0_0_8px_rgba(56,189,248,0.35)]" : "text-slate-500 group-hover:text-slate-900"
+                  }`}
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   {link.icon}
                 </svg>
-                
-                <span className="absolute -bottom-10 scale-0 rounded-lg bg-black/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-md transition-all group-hover:scale-100 border border-white/10">
+
+                <span className="absolute -bottom-10 scale-0 rounded-lg bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-md transition-all group-hover:scale-100 border border-white/10">
                   {link.label}
                 </span>
               </Link>
@@ -127,9 +126,9 @@ export default function Navbar({ user }: NavbarProps) {
 
       <div className="flex items-center gap-4">
         {user && (
-          <div className="flex items-center gap-3 rounded-full bg-white/[0.03] pl-4 pr-2 py-1.5 border border-white/5">
+          <div className="flex items-center gap-3 rounded-full bg-slate-50 pl-4 pr-2 py-1.5 border border-slate-200">
             <div className="flex flex-col items-end">
-              <span className="text-xs font-bold text-white tracking-tight">{user.name || user.email.split("@")[0]}</span>
+              <span className="text-xs font-bold text-slate-900 tracking-tight">{user.name || user.email.split("@")[0]}</span>
             </div>
             <div className="scale-90">
                 <Badge variant={roleBadgeVariant}>{user.role}</Badge>
@@ -137,11 +136,11 @@ export default function Navbar({ user }: NavbarProps) {
           </div>
         )}
 
-        <div className="h-8 w-px bg-white/10 mx-1" />
+        <div className="h-8 w-px bg-slate-200 mx-1" />
 
         <button
           onClick={handleLogout}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/5 text-red-400 transition-all hover:bg-red-500 hover:text-white border border-red-500/10"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 text-rose-700 transition-all hover:bg-rose-600 hover:text-white border border-rose-200"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

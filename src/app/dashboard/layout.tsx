@@ -25,9 +25,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#020617]">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       {!isAdminRoute && <Navbar user={user ?? undefined} />}
-      
       <main className="pt-0">
         {children}
       </main>
