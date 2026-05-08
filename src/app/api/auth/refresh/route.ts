@@ -1,66 +1,51 @@
-import { validateRefreshToken, generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-/**
- * Endpoint para refrescar los tokens de acceso.
- * Utiliza el refreshToken guardado en las cookies para generar un nuevo par de tokens.
- */
 export async function POST() {
     try {
         const cookieStore = await cookies();
-        const oldRefreshToken = cookieStore.get("refreshToken")?.value;
+        const refreshToken = cookieStore.get("refreshToken")?.value;
 
-        if (!oldRefreshToken) {
+        if (!refreshToken) {
             return NextResponse.json(
-                { message: "No hay token de refresco" },
+                { error: "No refresh token" },
                 { status: 401 }
             );
         }
 
-        const payload = validateRefreshToken(oldRefreshToken);
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET!
+        ) as { userId: number; role: string };
 
-        if (!payload) {
-            return NextResponse.json(
-                { message: "Token de refresco inválido o expirado" },
-                { status: 401 }
-            );
-        }
+        const newAccessToken = jwt.sign(
+            {
+                userId: decoded.userId,
+                role: decoded.role,
+            },
+            process.env.JWT_SECRET!,
+            { expiresIn: "15m" }
+        );
 
-        // Generar nuevos tokens (Token Rotation)
-        const newPayload = { 
-            id: payload.id, 
-            email: payload.email, 
-            role: payload.role 
-        };
-        const accessToken = generateAccessToken(newPayload);
-        const refreshToken = generateRefreshToken(newPayload);
-
-        const response = NextResponse.json({ message: "Token refrescado con éxito" });
-
-        // Actualizar cookies
-        response.cookies.set("accessToken", accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 15 * 60,
-            path: "/",
+        const response = NextResponse.json({
+            message: "Token renovado",
         });
 
-        response.cookies.set("refreshToken", refreshToken, {
+        response.cookies.set("accessToken", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60,
+            maxAge: 60 * 15,
             path: "/",
         });
 
         return response;
 
-    } catch (_error) {
+    } catch {
         return NextResponse.json(
-            { message: "Error al refrescar el token" },
-            { status: 500 }
+            { error: "Refresh token inválido" },
+            { status: 403 }
         );
     }
 }

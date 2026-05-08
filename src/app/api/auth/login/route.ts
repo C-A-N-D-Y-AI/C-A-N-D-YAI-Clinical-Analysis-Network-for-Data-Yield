@@ -1,56 +1,85 @@
-import { LoginUser } from "@/services/loginUser";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { prisma } from "@/app/lib/prisma";
 
-/**
- * Endpoint para el inicio de sesión.
- * Configura los tokens en cookies HttpOnly para mayor seguridad.
- */
 export async function POST(req: Request) {
-    try {
-        const { email, password } = await req.json();
+  try {
+    const { email, password } = await req.json();
 
-        if (!email || !password) {
-            return NextResponse.json(
-                { message: "Email y contraseña son obligatorios" },
-                { status: 400 }
-            );
-        }
-
-        const { accessToken, refreshToken, user } = await LoginUser({ email, password });
-
-        const response = NextResponse.json({
-            message: "Inicio de sesión exitoso",
-            user,
-        });
-
-        // Configurar Access Token en Cookie HttpOnly (15 min)
-        response.cookies.set("accessToken", accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 15 * 60,
-            path: "/",
-        });
-
-        // Configurar Refresh Token en Cookie HttpOnly (7 días)
-        response.cookies.set("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60,
-            path: "/",
-        });
-
-        return response;
-
-    } catch (error: unknown) {
-        // Fix #1: Respuesta genérica siempre — evita user enumeration attacks.
-        // El error interno se loguea pero NO se expone al cliente.
-        console.error("[AUTH LOGIN]", error instanceof Error ? error.message : error);
-
-        return NextResponse.json(
-            { message: "Credenciales inválidas" },
-            { status: 401 }
-        );
+    if (!email || !password) {
+      return NextResponse.json(
+        { success: false, error: "Email y contraseña requeridos" },
+        { status: 400 }
+      );
     }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: "Credenciales inválidas" },
+        { status: 401 }
+      );
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return NextResponse.json(
+        { success: false, error: "Credenciales inválidas" },
+        { status: 401 }
+      );
+    }
+
+    // Aumentamos el tiempo a 1 día para que no te de 401 mientras pruebas
+    const accessToken = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1d" } 
+    );
+
+    const refreshToken = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_REFRESH_SECRET!,
+      { expiresIn: "7d" }
+    );
+
+    // ARREGLO CLAVE: Agregamos success: true para que el DashboardRedirect lo lea
+    const response = NextResponse.json({
+      success: true, 
+      message: "Login exitoso",
+      user: {
+        email: user.email,
+        role: user.role,
+      },
+    });
+
+    response.cookies.set("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 1 día
+      path: "/",
+    });
+
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+
+    return response;
+
+  } catch (error) {
+    console.error("[LOGIN ERROR]", error);
+    return NextResponse.json(
+      { success: false, error: "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
 }

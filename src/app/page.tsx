@@ -1,28 +1,90 @@
+"use client";
+import Link from "next/link";
+ 
 export default function Home() {
   return (
-    <>
-      <main className="min-h-[calc(100vh-73px)] flex items-center justify-center p-8 bg-[#050A18]">
-        <div className="w-full max-w-4xl rounded-2xl bg-[#0D1525] border border-[#1A263D] shadow-2xl shadow-black/50 p-12">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-5xl md:text-6xl font-extrabold text-[#FFFFFF] mb-4">Bienvenido a <span className="text-[#0091DA]">CANDY</span></h1>
-              <p className="text-lg text-[#A0AEC0] mb-6">Entiende tu salud <span className="italic text-[#8E9AAF]">como nunca antes</span>. La plataforma que une datos clínicos y análisis con experiencia humana cálida.</p>
-              <div className="flex gap-4 justify-center md:justify-start">
-                <a href="/register" className="px-6 py-3 bg-[#0091DA] hover:bg-[#007AB8] text-[#FFFFFF] rounded-full font-semibold shadow-lg shadow-[#0091DA]/20 transform hover:scale-[1.02] transition-all">REGISTER</a>
-                <a href="/login" className="px-6 py-3 bg-transparent border border-[#1A263D] text-[#FFFFFF] rounded-full font-semibold hover:border-[#537FE7] hover:bg-[#1A263D]/50 transition-all">Acceder</a>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="w-full h-52 md:h-64 rounded-xl bg-[#050A18] shadow-inner border border-[#1A263D] flex items-center justify-center text-[#A0AEC0]/70"> 
-                <div className="text-center">
-                  <p className="text-sm text-[#A0AEC0]/60">Visual placeholder</p>
-                  <h3 className="mt-2 text-xl font-bold text-[#FFFFFF]">CANDY — Clinical Analysis Network</h3>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#020617] text-white overflow-x-hidden selection:bg-sky-500/30">
+ 
+      {/* NAVBAR */}
+      <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-10 py-5 backdrop-blur-md bg-[#020617]/80 border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.8)]" />
+          <span className="font-bold tracking-[0.45em] text-xs uppercase text-sky-100">C.A.N.D.Y</span>
+        </div>
+        <div className="flex items-center gap-3 text-xs uppercase tracking-widest">
+          <Link href="/login" className="text-slate-400 hover:text-white transition-colors px-3 py-1">Login</Link>
+          <Link href="/register" className="px-5 py-2 bg-sky-600 hover:bg-sky-500 transition-colors rounded-full text-white font-semibold">
+            Register
+          </Link>
+        </div>
+      </nav>
+ 
+      {/* HERO */}
+      <main className="relative text-center pt-52 pb-28 px-6 max-w-4xl mx-auto">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sky-600/10 rounded-full blur-3xl pointer-events-none" />
+ 
+        <p className="text-sky-500 text-xs uppercase tracking-[0.3em] mb-5 font-medium">
+          Plataforma Clínica Inteligente
+        </p>
+ 
+        <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight">
+          Entiende tu salud
+          <br />
+          <span className="text-slate-500 italic font-light">como nunca antes</span>
+        </h1>
+ 
+        <p className="mt-6 text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+          C.A.N.D.Y convierte diagnósticos médicos en{" "}
+          <span className="text-sky-400">visualizaciones 3D simples</span>{" "}
+          para mejor comprensión.
+        </p>
+ 
+        <div className="mt-10 flex justify-center gap-3 flex-wrap">
+          <Link href="/register" className="px-8 py-3 bg-sky-600 hover:bg-sky-500 transition-colors rounded-full font-semibold text-sm">
+            Explorar diagnóstico
+          </Link>
+          <Link href="/login" className="px-8 py-3 border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all rounded-full text-sm text-slate-300">
+            Acceder
+          </Link>
         </div>
       </main>
-    </>
+ 
+      {/* FEATURES */}
+      <section className="max-w-5xl mx-auto px-6 grid md:grid-cols-3 gap-4 pb-24">
+        {[
+          { title: "Visualización 3D", desc: "Explora información médica de forma clara y tridimensional." },
+          { title: "Interpretación médica", desc: "Convierte datos complejos en información comprensible." },
+          { title: "Análisis clínico", desc: "Seguimiento estructurado y preciso del paciente." },
+        ].map((item, i) => (
+          <div key={i} className="p-7 rounded-2xl border border-white/[0.08] bg-white/[0.03] hover:bg-sky-500/5 hover:border-sky-500/20 transition-all duration-300">
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 mb-5" />
+            <h3 className="font-semibold text-sm text-white mb-2 tracking-wide">{item.title}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </section>
+ 
+      {/* CTA */}
+      <section className="text-center py-24 px-6 border-t border-white/5">
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          Comprende tu salud{" "}
+          <span className="text-slate-500 italic font-light">visualmente</span>
+        </h2>
+        <p className="text-slate-500 text-sm mb-8">Plataforma médica moderna basada en datos.</p>
+        <div className="flex justify-center gap-3 flex-wrap">
+          <Link href="/register" className="px-8 py-3 bg-sky-600 hover:bg-sky-500 transition-colors rounded-full text-sm font-semibold">
+            Crear cuenta
+          </Link>
+          <Link href="/login" className="px-8 py-3 border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all rounded-full text-sm text-slate-300">
+            Login
+          </Link>
+        </div>
+      </section>
+ 
+      {/* FOOTER */}
+      <footer className="border-t border-white/5 py-8 text-center text-xs text-slate-600 tracking-widest">
+        © 2026 C.A.N.D.Y · Plataforma Clínica Inteligente
+      </footer>
+    </div>
   );
 }
