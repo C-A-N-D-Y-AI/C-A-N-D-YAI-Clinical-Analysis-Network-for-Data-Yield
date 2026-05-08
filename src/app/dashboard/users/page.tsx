@@ -28,18 +28,18 @@ export default function UserDashboardPage() {
   }, [router]);
 
   if (loading) return (
-    <div className="flex min-h-screen items-center justify-center bg-[#020617]">
-      <div className="animate-pulse text-[#0ea5e9] font-black tracking-widest text-xs uppercase">Sincronizando con C.A.N.D.Y...</div>
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="animate-pulse text-blue-600 font-black tracking-widest text-xs uppercase">Sincronizando con C.A.N.D.Y...</div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white font-sans p-4 md:p-8 overflow-hidden relative flex items-center">
+    <div className="min-h-screen bg-white text-slate-900 font-sans p-4 md:p-8 overflow-hidden relative flex items-center">
       
       {/* ── EFECTOS DE FONDO ── */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 w-full">
@@ -47,21 +47,21 @@ export default function UserDashboardPage() {
           
           {/* ── COLUMNA IZQUIERDA: BIENVENIDA ── */}
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/30 bg-sky-500/5 text-sky-400 text-[10px] font-black tracking-[0.2em] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-600 text-[10px] font-black tracking-[0.2em] uppercase">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
               </span>
               C.A.N.D.Y Core Online
             </div>
             
             <h1 className="text-7xl md:text-9xl font-bold tracking-tighter leading-[0.8] mb-4">
               Welcome to <br />
-              <span className="text-[#0ea5e9] italic drop-shadow-[0_0_30px_rgba(14,165,233,0.4)]">C.A.N.D.Y.</span>
+              <span className="text-blue-600 italic drop-shadow-[0_0_30px_rgba(37,99,235,0.2)]">C.A.N.D.Y.</span>
             </h1>
             
-            <p className="text-slate-400 text-xl max-w-lg leading-relaxed border-l-2 border-sky-500/20 pl-6">
-              Hola, <span className="text-white font-semibold">{user?.name || 'Usuario'}</span>. 
+            <p className="text-slate-500 text-xl max-w-lg leading-relaxed border-l-2 border-blue-500/20 pl-6">
+              Hola, <span className="text-blue-700 font-semibold">{user?.name || 'Usuario'}</span>. 
               El núcleo médico ha sido inicializado. La inteligencia artificial está analizando tus parámetros biométricos en tiempo real.
             </p>
           </div>
@@ -71,14 +71,14 @@ export default function UserDashboardPage() {
             <div className="relative w-80 h-80 md:w-[500px] md:h-[500px] flex items-center justify-center">
               
               {/* Anillos de Datos Externos */}
-              <div className="absolute inset-0 border border-sky-500/20 rounded-full animate-[spin_10s_linear_infinite]" />
-              <div className="absolute inset-10 border border-dashed border-sky-400/30 rounded-full animate-[spin_20s_linear_infinite_reverse]" />
+              <div className="absolute inset-0 border border-blue-500/10 rounded-full animate-[spin_10s_linear_infinite]" />
+              <div className="absolute inset-10 border border-dashed border-blue-400/20 rounded-full animate-[spin_20s_linear_infinite_reverse]" />
 
               {/* Orbe Central / Cámara de Contención */}
-              <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-full bg-sky-500/5 border border-sky-500/20 shadow-[0_0_100px_rgba(14,165,233,0.2)] backdrop-blur-sm flex items-center justify-center overflow-hidden">
+              <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-full bg-blue-500/5 border border-blue-500/10 shadow-[0_0_100px_rgba(37,99,235,0.05)] backdrop-blur-sm flex items-center justify-center overflow-hidden">
                 
                 {/* LUZ INTERNA PULSANTE */}
-                <div className="absolute inset-0 bg-gradient-to-t from-sky-600/10 to-transparent animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-600/5 to-transparent animate-pulse" />
 
                 {/* ── CRUZ 3D FLOTANTE ── */}
                 <div className="scene">
@@ -102,12 +102,12 @@ export default function UserDashboardPage() {
                 </div>
 
                 {/* Rayo de Escaneo */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-400/30 to-transparent h-12 w-full animate-scan" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-400/20 to-transparent h-12 w-full animate-scan" />
               </div>
 
               {/* Partículas Orbitando */}
               <div className="absolute w-full h-full animate-[spin_8s_linear_infinite]">
-                <div className="w-2 h-2 bg-sky-400 rounded-full blur-[1px] absolute top-0 left-1/2 shadow-[0_0_15px_#0ea5e9]" />
+                <div className="w-2 h-2 bg-blue-400 rounded-full blur-[1px] absolute top-0 left-1/2 shadow-[0_0_15px_#2563eb]" />
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function UserDashboardPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          filter: drop-shadow(0 0 20px rgba(14,165,233,0.8));
+          filter: drop-shadow(0 0 20px rgba(37,99,235,0.4));
         }
 
         .cross-3d {
@@ -146,9 +146,9 @@ export default function UserDashboardPage() {
 
         .face {
           position: absolute;
-          background: #0ea5e9;
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+          background: #2563eb;
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         /* TAMAÑOS: Cruz de 60px de largo, 20px de grosor */

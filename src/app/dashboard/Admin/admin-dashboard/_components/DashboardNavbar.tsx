@@ -41,13 +41,13 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
   ];
 
   return (
-    <nav className="relative z-50 flex items-center justify-between bg-[#020617] px-8 py-4">
+    <nav className="relative z-50 flex items-center justify-between bg-white px-8 py-4 border-b border-slate-200">
       <div className="flex items-center gap-10">
         <Link href="/dashboard/Admin" className="flex items-center gap-3 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg shadow-sky-500/20 transition-all group-hover:scale-110">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-500/20 transition-all group-hover:scale-110">
             <span className="text-white font-black text-xs">CA</span>
           </div>
-          <span className="text-xl font-black tracking-tighter text-white uppercase">C.A.N.D.Y</span>
+          <span className="text-xl font-black tracking-tighter text-slate-900 uppercase">C.A.N.D.Y</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
@@ -59,20 +59,20 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
                 href={link.href}
                 className={`group relative flex h-12 w-12 items-center justify-center rounded-[1.25rem] border transition-all duration-500 ${
                   isActive
-                    ? "border-sky-500/40 bg-sky-500/10 shadow-[0_0_20px_rgba(14,165,233,0.2)]"
-                    : "border-white/5 bg-white/[0.03] hover:border-white/20"
+                    ? "border-blue-500/40 bg-blue-50 shadow-[0_0_20px_rgba(37,99,235,0.1)]"
+                    : "border-slate-100 bg-slate-50 hover:border-slate-200"
                 }`}
               >
                 <svg
                   className={`h-6 w-6 transition-all duration-300 ${
-                    isActive ? "text-sky-400" : "text-slate-500 group-hover:text-sky-300"
+                    isActive ? "text-blue-600" : "text-slate-400 group-hover:text-blue-500"
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   {link.icon}
                 </svg>
-                <span className="absolute -bottom-10 scale-0 rounded-lg bg-black/80 px-2.5 py-1 text-[10px] font-bold text-white transition-all group-hover:scale-100 border border-white/10">
+                <span className="absolute -bottom-10 scale-0 rounded-lg bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-white transition-all group-hover:scale-100 border border-slate-800">
                   {link.label}
                 </span>
               </Link>

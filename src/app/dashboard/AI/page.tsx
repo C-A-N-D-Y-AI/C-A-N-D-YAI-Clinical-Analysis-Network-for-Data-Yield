@@ -135,32 +135,39 @@ const Index = () => {
 
   return (
     <main 
-      className="relative h-screen overflow-hidden bg-gradient-soft"
+      className="relative h-screen overflow-hidden bg-white"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* Decorative blobs */}
-      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-accent/20 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-20 h-96 w-96 rounded-full bg-blue-600/5 blur-3xl" />
 
-      {/* Silueta humana decorativa de fondo */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <HumanSilhouette mousePosition={mousePosition} />
-      </div>
+      <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col lg:flex-row gap-6 px-4 py-6">
+        {/* Silhouette Panel - Visible only on large screens */}
+        <div className="hidden lg:flex lg:w-1/3 flex-col justify-center items-center bg-slate-50/50 rounded-3xl border border-slate-100 p-8 shadow-sm">
+          <div className="relative w-full h-[600px]">
+            <HumanSilhouette mousePosition={mousePosition} />
+          </div>
+          <div className="mt-6 text-center">
+            <h2 className="text-lg font-bold text-slate-900">Mapa de Salud</h2>
+            <p className="text-sm text-slate-500">Visualización interactiva de tu análisis anatómico</p>
+          </div>
+        </div>
 
-      <div className="relative z-10 mx-auto flex h-full max-w-3xl flex-col px-4 py-6">
+        <div className="flex-1 flex flex-col h-full">
         {/* Header */}
-        <header className="mb-4 flex items-center justify-between rounded-2xl border border-border bg-card/70 px-5 py-3 backdrop-blur-xl shadow-soft">
+        <header className="mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-5 py-3 backdrop-blur-xl shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground shadow-elegant">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-base font-bold leading-tight">Asistente Médico IA</h1>
-              <p className="text-xs text-muted-foreground">Entiende tus exámenes en lenguaje humano</p>
+              <h1 className="text-base font-bold leading-tight text-slate-900">Asistente Médico IA</h1>
+              <p className="text-xs text-slate-500">Entiende tus exámenes en lenguaje humano</p>
             </div>
           </div>
-          <span className="hidden rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary md:inline">
+          <span className="hidden rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600 md:inline">
             En línea
           </span>
         </header>
@@ -168,7 +175,7 @@ const Index = () => {
         {/* Chat messages */}
         <div
           ref={scrollRef}
-          className="relative flex-1 space-y-4 overflow-y-auto rounded-2xl border border-border bg-card/40 p-4 backdrop-blur-md md:p-6"
+          className="relative flex-1 space-y-4 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50/50 p-4 backdrop-blur-md md:p-6"
         >
           <div className="relative z-10 space-y-4">
           {messages.map((m) => (
@@ -177,19 +184,19 @@ const Index = () => {
               className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}
             >
               {m.role === "assistant" && (
-                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground shadow-soft">
+                <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
                   <Sparkles className="h-4 w-4" />
                 </div>
               )}
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-soft backdrop-blur-md ${
+                className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm backdrop-blur-md ${
                   m.role === "user"
-                    ? "bg-gradient-primary text-primary-foreground rounded-tr-sm"
-                    : "bg-card/90 text-card-foreground border border-border rounded-tl-sm"
+                    ? "bg-blue-600 text-white rounded-tr-sm"
+                    : "bg-white text-slate-900 border border-slate-200 rounded-tl-sm"
                 }`}
               >
                 {m.role === "assistant" ? (
-                  <div className="prose prose-sm prose-slate dark:prose-invert max-w-none prose-headings:font-bold prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:leading-relaxed prose-ul:my-2">
+                  <div className="prose prose-sm prose-slate max-w-none prose-headings:font-bold prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-p:my-2 prose-p:leading-relaxed prose-ul:my-2">
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   </div>
                 ) : (
@@ -201,11 +208,11 @@ const Index = () => {
 
           {loading && (
             <div className="flex gap-3">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground shadow-soft">
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
                 <Sparkles className="h-4 w-4" />
               </div>
-              <div className="rounded-2xl rounded-tl-sm border border-border bg-card/90 px-4 py-3 shadow-soft backdrop-blur-md">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="rounded-2xl rounded-tl-sm border border-slate-200 bg-white px-4 py-3 shadow-sm backdrop-blur-md">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Leyendo tu examen...
                 </div>
@@ -216,15 +223,15 @@ const Index = () => {
         </div>
 
         {/* Input bar */}
-        <div className="mt-4 rounded-2xl border border-border bg-card/80 p-3 shadow-elegant backdrop-blur-xl">
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg backdrop-blur-xl">
           {file && (
-            <div className="mb-3 flex items-center gap-2 rounded-xl border border-border bg-secondary/60 px-3 py-2 text-sm">
-              <FileText className="h-4 w-4 text-primary" />
+            <div className="mb-3 flex items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 text-sm text-slate-900">
+              <FileText className="h-4 w-4 text-blue-600" />
               <span className="flex-1 truncate font-medium">{file.name}</span>
-              <span className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB</span>
+              <span className="text-xs text-slate-500">{(file.size / 1024).toFixed(0)} KB</span>
               <button
                 onClick={() => setFile(null)}
-                className="rounded-full p-1 transition-smooth hover:bg-destructive/10 hover:text-destructive"
+                className="rounded-full p-1 transition-colors hover:bg-red-50 hover:text-red-600"
                 aria-label="Quitar archivo"
               >
                 <X className="h-4 w-4" />
@@ -262,13 +269,13 @@ const Index = () => {
               }}
               placeholder={file ? "Añade un mensaje (opcional)..." : "Escribe tu mensaje o adjunta un examen..."}
               disabled={loading}
-              className="flex-1 rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
             <Button
               type="button"
               onClick={send}
               disabled={(!file && !text.trim()) || loading}
-              className="shrink-0 rounded-xl bg-gradient-primary text-primary-foreground shadow-elegant hover:opacity-90"
+              className="shrink-0 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
               aria-label="Enviar"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
@@ -277,6 +284,7 @@ const Index = () => {
           <p className="mt-2 px-1 text-[11px] text-muted-foreground">
             ⚕️ La IA orienta, pero no reemplaza al médico.
           </p>
+        </div>
         </div>
       </div>
     </main>

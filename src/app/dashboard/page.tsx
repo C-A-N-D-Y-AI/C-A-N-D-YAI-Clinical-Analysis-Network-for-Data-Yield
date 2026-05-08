@@ -40,8 +40,8 @@ export default function DashboardRedirect() {
     }, [router]);
 
     return (
-        <div className="min-h-screen bg-[#020617] flex items-center justify-center">
-            <div className="text-sky-500 animate-pulse font-mono text-xs uppercase tracking-widest">
+        <div className="min-h-screen bg-white flex items-center justify-center">
+            <div className="text-blue-600 animate-pulse font-mono text-xs uppercase tracking-widest">
                 Verificando credenciales...
             </div>
         </div>
