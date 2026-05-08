@@ -53,13 +53,23 @@ export const isClearlyOffTopic = ({
   text: string;
   hasMedicalContext: boolean;
 }) => {
-  if (hasMedicalContext) return false;
-
   const normalized = normalize(text);
   const mentionsMedicalTopic = medicalTerms.some((term) => normalized.includes(term));
-  if (mentionsMedicalTopic) return false;
-
-  return offTopicTerms.some((term) => normalized.includes(term)) || normalized.split(/\s+/).length <= 8;
+  const hasOffTopicTerm = offTopicTerms.some((term) => normalized.includes(term));
+  const wordCount = normalized.split(/\s+/).length;
+  
+  // If user explicitly mentions off-topic terms WITHOUT any medical mention, reject
+  if (hasOffTopicTerm && !mentionsMedicalTopic && !hasMedicalContext) {
+    return true;
+  }
+  
+  // If it's very short (<=3 words) and has no medical mention, it's likely off-topic
+  if (wordCount <= 3 && !mentionsMedicalTopic && !hasMedicalContext) {
+    return true;
+  }
+  
+  // If they mention medical topics or have a document, it's on-topic
+  return false;
 };
 
 export const offTopicResponse =
