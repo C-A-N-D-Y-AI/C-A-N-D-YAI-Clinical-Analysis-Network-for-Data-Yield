@@ -26,7 +26,7 @@ export default async function AdminLayout({
   if (user.role !== "ADMIN") redirect("/unauthorized");
 
   return (
-    <div className="min-h-screen bg-[#050A18] text-[#FFFFFF] font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
       <DashboardNavbar user={user} />
       <main className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1">
         {children}

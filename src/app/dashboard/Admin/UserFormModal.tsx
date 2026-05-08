@@ -75,7 +75,7 @@ function UserFormModalContent({
         Swal.fire({
           title: "¡Éxito!",
           text: userToEdit ? "Usuario actualizado correctamente" : "Usuario creado correctamente",
-          icon: "success", background: "#0D1525", color: "#FFFFFF", timer: 1500, showConfirmButton: false,
+          icon: "success", background: "#FFFFFF", color: "#0F172A", timer: 1500, showConfirmButton: false,
         });
         onSuccess();
         onClose();
@@ -84,23 +84,23 @@ function UserFormModalContent({
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Hubo un problema al guardar";
-      Swal.fire({ title: "Error", text: message, icon: "error", background: "#0D1525", color: "#FFFFFF" });
+      Swal.fire({ title: "Error", text: message, icon: "error", background: "#FFFFFF", color: "#0F172A" });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const inputClass = "w-full bg-[#050A18] border border-[#1A263D] p-3 rounded-xl text-[#FFFFFF] placeholder:text-[#A0AEC0]/50 focus:outline-none focus:ring-2 focus:ring-[#0091DA]/40 focus:border-[#0091DA] transition-all text-sm";
-  const labelClass = "text-xs font-bold text-[#A0AEC0] uppercase tracking-wider";
+  const inputClass = "w-full bg-slate-50 border border-slate-200 p-3 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm";
+  const labelClass = "text-xs font-bold text-slate-500 uppercase tracking-wider";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#050A18]/80 backdrop-blur-sm">
-      <div className="bg-[#0D1525] rounded-2xl border border-[#1A263D] w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="p-6 border-b border-[#1A263D] flex justify-between items-center bg-[#050A18]/50">
-          <h2 className="text-xl font-bold text-[#FFFFFF] tracking-tight">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-md shadow-2xl overflow-hidden">
+        <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
+          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
             {userToEdit ? "Editar Usuario" : "Nuevo Usuario"}
           </h2>
-          <button onClick={onClose} className="text-[#A0AEC0] hover:text-white transition-colors">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -138,7 +138,7 @@ function UserFormModalContent({
             <div className="space-y-2">
               <label className={labelClass}>Rol</label>
               <select name="role" value={formData.role || "USER"} onChange={handleChange}
-                className="w-full bg-[#050A18] border border-[#1A263D] p-3 rounded-xl text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#0091DA]/40 focus:border-[#0091DA] transition-all text-sm">
+                className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
                 <option value="USER">Usuario (USER)</option>
                 <option value="ADMIN">Administrador (ADMIN)</option>
               </select>
@@ -147,19 +147,19 @@ function UserFormModalContent({
               <label className={labelClass}>Estado</label>
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" name="isActive" checked={formData.isActive || false} onChange={handleChange}
-                  className="w-5 h-5 rounded border-[#1A263D] bg-[#050A18] text-[#0091DA]" />
-                <span className="text-[#FFFFFF] text-sm font-medium">Activo</span>
+                  className="w-5 h-5 rounded border-slate-300 bg-slate-50 text-blue-600" />
+                <span className="text-slate-900 text-sm font-medium">Activo</span>
               </label>
             </div>
           </div>
 
-          <div className="flex gap-3 mt-6 pt-6 border-t border-[#1A263D]">
+          <div className="flex gap-3 mt-6 pt-6 border-t border-slate-100">
             <button type="button" onClick={onClose} disabled={isLoading}
-              className="flex-1 py-3 rounded-xl font-bold border border-[#1A263D] text-[#A0AEC0] hover:text-white hover:bg-[#1A263D]/50 transition-all text-sm">
+              className="flex-1 py-3 rounded-xl font-bold border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all text-sm">
               Cancelar
             </button>
             <button type="submit" disabled={isLoading}
-              className="flex-1 bg-[#0091DA] hover:bg-[#007AB8] text-[#FFFFFF] py-3 rounded-xl font-bold transition-all text-sm flex justify-center items-center gap-2">
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition-all text-sm flex justify-center items-center gap-2 shadow-lg shadow-blue-600/20">
               {isLoading ? "Guardando..." : "Guardar"}
             </button>
           </div>

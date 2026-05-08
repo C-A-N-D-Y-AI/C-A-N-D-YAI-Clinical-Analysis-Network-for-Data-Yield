@@ -14,18 +14,18 @@ export function AdminHeader({
   userInitials = "AD",
 }: AdminHeaderProps) {
   return (
-    <header className="mb-6 border-b border-[#1A263D] pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <header className="mb-6 border-b border-slate-200 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-[#FFFFFF]">
-          {title} <span className="text-[#0091DA]">.</span>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-slate-900">
+          {title} <span className="text-blue-600">.</span>
         </h1>
-        <p className="text-[#A0AEC0]">{description}</p>
+        <p className="text-slate-500">{description}</p>
       </div>
-      <div className="flex items-center gap-4 bg-[#0D1525] px-4 py-2 rounded-full border border-[#1A263D]">
-        <div className="w-9 h-9 rounded-full bg-[#0091DA] flex items-center justify-center font-bold text-[#FFFFFF] shadow-[0_0_10px_rgba(0,145,218,0.3)]">
+      <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+        <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20">
           {userInitials}
         </div>
-        <span className="font-semibold text-[#FFFFFF] tracking-wide">{userName}</span>
+        <span className="font-semibold text-slate-900 tracking-wide">{userName}</span>
       </div>
     </header>
   );

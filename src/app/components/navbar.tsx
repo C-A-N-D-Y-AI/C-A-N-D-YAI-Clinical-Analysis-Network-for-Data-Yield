@@ -59,12 +59,12 @@ export default function Navbar({ user }: NavbarProps) {
   ];
 
   return (
-    <nav className="relative z-50 flex items-center justify-between bg-[#020617] px-8 py-4 backdrop-blur-xl border-none shadow-none outline-none">
+    <nav className="relative z-50 flex items-center justify-between bg-white px-8 py-4 border-b border-slate-100 shadow-sm">
       
       <div className="flex items-center gap-10">
         {/* LOGO IZQUIERDA - MINI 3D CROSS */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-lg shadow-sky-500/20 transition-all group-hover:scale-110 group-hover:shadow-sky-500/40 relative overflow-hidden">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-500/20 transition-all group-hover:scale-110 group-hover:shadow-blue-500/40 relative overflow-hidden">
              
              {/* ESCENA 3D MINIATURIZADA */}
              <div className="nav-scene">
@@ -89,7 +89,7 @@ export default function Navbar({ user }: NavbarProps) {
              {/* Brillo de barrido */}
              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
           </div>
-          <span className="text-xl font-black tracking-tighter text-white uppercase">C.A.N.D.Y</span>
+          <span className="text-xl font-black tracking-tighter text-slate-900 uppercase">C.A.N.D.Y</span>
         </Link>
 
         {/* NAV LINKS */}
@@ -102,13 +102,13 @@ export default function Navbar({ user }: NavbarProps) {
                 href={link.href}
                 className={`group relative flex h-12 w-12 items-center justify-center rounded-[1.25rem] border transition-all duration-500 ${
                   isActive 
-                    ? "border-sky-500/40 bg-sky-500/10 shadow-[0_0_20px_rgba(14,165,233,0.2)]" 
-                    : "border-white/5 bg-white/[0.03] hover:border-white/20"
+                    ? "border-blue-500/40 bg-blue-50 shadow-[0_0_20px_rgba(37,99,235,0.1)]" 
+                    : "border-slate-100 bg-slate-50 hover:border-slate-200"
                 }`}
               >
                 <svg 
                   className={`h-6 w-6 transition-all duration-300 ${
-                    isActive ? "text-sky-400 drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]" : "text-slate-500 group-hover:text-sky-300"
+                    isActive ? "text-blue-600 drop-shadow-[0_0_8px_rgba(37,99,235,0.4)]" : "text-slate-400 group-hover:text-blue-500"
                   }`} 
                   fill="currentColor" 
                   viewBox="0 0 20 20"
@@ -116,7 +116,7 @@ export default function Navbar({ user }: NavbarProps) {
                   {link.icon}
                 </svg>
                 
-                <span className="absolute -bottom-10 scale-0 rounded-lg bg-black/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-md transition-all group-hover:scale-100 border border-white/10">
+                <span className="absolute -bottom-10 scale-0 rounded-lg bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-md transition-all group-hover:scale-100 border border-slate-800">
                   {link.label}
                 </span>
               </Link>
@@ -127,9 +127,9 @@ export default function Navbar({ user }: NavbarProps) {
 
       <div className="flex items-center gap-4">
         {user && (
-          <div className="flex items-center gap-3 rounded-full bg-white/[0.03] pl-4 pr-2 py-1.5 border border-white/5">
+          <div className="flex items-center gap-3 rounded-full bg-slate-50 pl-4 pr-2 py-1.5 border border-slate-100">
             <div className="flex flex-col items-end">
-              <span className="text-xs font-bold text-white tracking-tight">{user.name || user.email.split("@")[0]}</span>
+              <span className="text-xs font-bold text-slate-900 tracking-tight">{user.name || user.email.split("@")[0]}</span>
             </div>
             <div className="scale-90">
                 <Badge variant={roleBadgeVariant}>{user.role}</Badge>
@@ -137,7 +137,7 @@ export default function Navbar({ user }: NavbarProps) {
           </div>
         )}
 
-        <div className="h-8 w-px bg-white/10 mx-1" />
+        <div className="h-8 w-px bg-slate-100 mx-1" />
 
         <button
           onClick={handleLogout}

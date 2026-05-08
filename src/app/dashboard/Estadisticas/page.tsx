@@ -104,9 +104,9 @@ export default function UserDashboardPage() {
 
   if (loading)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#020617]">
-        <div className="animate-pulse text-sky-400 font-medium tracking-widest text-sm italic">
-          Abriendo tu baúl de recuerdos...
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="animate-pulse text-blue-600 font-medium tracking-widest text-sm italic">
+          Cargando tus estadísticas...
         </div>
       </div>
     );
@@ -120,27 +120,27 @@ export default function UserDashboardPage() {
   const statusColor = storagePercent > 30 ? "text-green-400" : storagePercent > 10 ? "text-yellow-400" : "text-red-400";
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white font-sans p-4 md:p-8 overflow-hidden relative">
+    <div className="min-h-screen bg-white text-slate-900 font-sans p-4 md:p-8 overflow-hidden relative">
       
       {/* Luces de fondo */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* BIENVENIDA */}
         <div className="mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-sky-500/30 bg-sky-500/5 text-sky-300 text-xs font-medium uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-600 text-xs font-medium uppercase tracking-wider">
             Sistema C.A.N.D.Y preparado
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mt-6">
-            Estadistica <br />
-            <span className="text-sky-400 italic">Personal</span>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mt-6 text-slate-900">
+            Estadística <br />
+            <span className="text-blue-600 italic">Personal</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-2xl leading-relaxed mt-6 border-l-4 border-sky-500/30 pl-6">
-            ¡Hola, <span className="text-white font-semibold">{user?.name ?? "Cariño"}</span>! 
-            Hoy tienes el <span className={statusColor}>{storagePercent}%</span> de tu estante libre para guardar más cosas lindas.
+          <p className="text-slate-500 text-lg max-w-2xl leading-relaxed mt-6 border-l-4 border-blue-500/30 pl-6">
+            ¡Hola, <span className="text-slate-900 font-semibold">{user?.name ?? "Cariño"}</span>! 
+            Hoy tienes el <span className={statusColor.replace('sky', 'blue').replace('green', 'emerald')}>{storagePercent}%</span> de tu espacio libre para guardar más cosas.
           </p>
         </div>
 
@@ -152,26 +152,25 @@ export default function UserDashboardPage() {
             { t: "ESPACIO LIBRE", v: `${storagePercent}%`, s: "Lo que nos queda" },
             { t: "CAPACIDAD TOTAL", v: "10 GB", s: "Tamaño de tu baúl" }
           ].map((stat) => (
-            <div key={stat.t} className="rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 transition-all hover:bg-white/[0.06]">
-              <p className="text-[10px] tracking-[0.2em] font-black text-slate-500 uppercase">{stat.t}</p>
-              <h2 className="text-4xl font-bold mt-2 text-white">{stat.v}</h2>
-              <p className="text-slate-400 text-xs mt-2">{stat.s}</p>
+            <div key={stat.t} className="rounded-[2.5rem] border border-slate-200 bg-white p-8 transition-all hover:bg-slate-50 shadow-sm">
+              <p className="text-[10px] tracking-[0.2em] font-black text-slate-400 uppercase">{stat.t}</p>
+              <h2 className="text-4xl font-bold mt-2 text-slate-900">{stat.v}</h2>
+              <p className="text-slate-500 text-xs mt-2">{stat.s}</p>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 mt-16">
           
-          {/* MEDIDOR CIRCULAR */}
-          <div className="rounded-[3rem] border border-white/5 bg-white/[0.02] p-10 flex flex-col items-center">
-            <h2 className="text-2xl font-semibold mb-2">Estado del Baúl</h2>
+          <div className="rounded-[3rem] border border-slate-100 bg-slate-50/30 p-10 flex flex-col items-center shadow-sm">
+            <h2 className="text-2xl font-semibold mb-2 text-slate-900">Estado del Baúl</h2>
             <p className="text-slate-500 text-sm mb-10 text-center text-balance">Así se ve tu espacio de almacenamiento hoy.</p>
 
-            <div className="relative w-64 h-64 flex items-center justify-center">
-              <div className="absolute inset-0 border border-sky-500/10 rounded-full animate-[spin_30s_linear_infinite]" />
+            <div className="relative w-64 h-64 flex items-center justify-center bg-white rounded-full shadow-inner">
+              <div className="absolute inset-0 border border-blue-500/10 rounded-full animate-[spin_30s_linear_infinite]" />
               <div className="text-center z-10">
-                <span className={`text-6xl font-black ${statusColor}`}>{storagePercent}%</span>
-                <p className="text-slate-400 text-[10px] mt-1 uppercase tracking-widest font-bold">Libre</p>
+                <span className={`text-6xl font-black ${statusColor.replace('sky', 'blue').replace('green', 'emerald')}`}>{storagePercent}%</span>
+                <p className="text-slate-500 text-[10px] mt-1 uppercase tracking-widest font-bold">Libre</p>
               </div>
             </div>
 
@@ -180,9 +179,9 @@ export default function UserDashboardPage() {
                 <span>OCUPADO: {usedPercent.toFixed(0)}%</span>
                 <span>META: 10 GB</span>
               </div>
-              <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden">
+              <div className="h-3 w-full rounded-full bg-slate-200 overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-sky-600 to-sky-400 transition-all duration-1000"
+                  className="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all duration-1000 shadow-lg shadow-blue-500/20"
                   style={{ width: `${usedPercent}%` }}
                 />
               </div>
@@ -190,20 +189,20 @@ export default function UserDashboardPage() {
           </div>
 
           {/* ÚLTIMAS COSAS GUARDADAS CON BOTÓN DE ELIMINAR */}
-          <div className="rounded-[3rem] border border-white/5 bg-white/[0.02] p-10">
-            <h2 className="text-2xl font-semibold mb-2">Lo último que guardaste</h2>
+          <div className="rounded-[3rem] border border-slate-100 bg-slate-50/30 p-10 shadow-sm">
+            <h2 className="text-2xl font-semibold mb-2 text-slate-900">Lo último que guardaste</h2>
             <p className="text-slate-500 text-sm mb-8">Aquí están tus archivos más recientes.</p>
             
             <div className="space-y-4">
               {recentDocs.length > 0 ? (
                 recentDocs.map((doc) => (
-                  <div key={doc.id} className="group flex items-center gap-5 rounded-3xl bg-white/[0.03] p-5 hover:bg-white/[0.07] transition-all border border-transparent hover:border-red-500/20">
-                    <div className="h-10 w-10 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                  <div key={doc.id} className="group flex items-center gap-5 rounded-3xl bg-white p-5 hover:bg-slate-50 transition-all border border-slate-200 hover:border-blue-500/20 shadow-sm">
+                    <div className="h-10 w-10 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                     </div>
                     <div className="flex-1 overflow-hidden">
-                      <p className="font-medium text-white/90 truncate text-sm">{doc.name}</p>
-                      <span className="text-[10px] text-slate-500 uppercase tracking-tighter">
+                      <p className="font-medium text-slate-900 truncate text-sm">{doc.name}</p>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-tighter">
                         Guardado el {new Date(doc.createdAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -220,7 +219,7 @@ export default function UserDashboardPage() {
                     </button>
 
                     <div className="text-right ml-2">
-                      <p className="text-xs font-bold text-sky-400">{(doc.size / 1024 / 1024).toFixed(1)} MB</p>
+                      <p className="text-xs font-bold text-blue-600">{(doc.size / 1024 / 1024).toFixed(1)} MB</p>
                     </div>
                   </div>
                 ))
