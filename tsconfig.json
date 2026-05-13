@@ -19,7 +19,26 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"],
+      "@/actions/*": ["./src/modules/user/actions/*"],
+      "@/app/components/*": ["./src/shared/components/*"],
+      "@/app/lib/prisma": ["./src/infrastructure/db/prisma"],
+      "@/assets/*": ["./src/modules/anatomy/presentation/assets/*"],
+      "@/components/*": ["./src/shared/components/*"],
+      "@/hooks/*": [
+        "./src/shared/hooks/*",
+        "./src/modules/user/application/*"
+      ],
+      "@/integrations/supabase/*": ["./src/infrastructure/storage/supabase/*"],
+      "@/lib/hash": ["./src/infrastructure/auth/hash"],
+      "@/lib/jwt": ["./src/infrastructure/auth/jwt"],
+      "@/lib/pdf-parser": ["./src/modules/upload/application/pdf-parser"],
+      "@/lib/prisma": ["./src/infrastructure/db/prisma"],
+      "@/lib/utils": ["./src/shared/utils/utils"],
+      "@/types/*": [
+        "./src/modules/user/types/*",
+        "./src/shared/types/*"
+      ]
     }
   },
   "include": [
@@ -30,5 +49,10 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".next/dev",
+    "src/infrastructure/ai/supabase/functions",
+    "src/tests"
+  ]
 }
