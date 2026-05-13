@@ -4,22 +4,44 @@ import { jwtVerify } from "jose";
 
 interface JWTPayload {
   userId: number;
-  role: "ADMIN" | "User";
+  role: "ADMIN" | "USER";
+}
+
+// Rate limiting en memoria
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+  entry.count++;
+  return true;
 }
 
 const ROUTE_CONFIG = {
   authPages: ["/login", "/register"],
-  protectedPages: ["/dashboard"],
-  adminPages: ["/dashboard/admin"],
+  protectedPages: ["/dashboard", "/admin-dashboard"],
+  adminPages: ["/dashboard/admin", "/dashboard/users", "/admin-dashboard"],
   publicApiRoutes: [
     "/api/auth/login",
     "/api/auth/register",
     "/api/auth/refresh",
   ],
+  adminApiRoutes: [
+    "/api/users",
+  ],
   protectedApiRoutes: [
     "/api/auth/logout",
     "/api/auth/me",
     "/api/document",
+    "/api/documents",
+    "/api/stats",
     "/api/users/update",
     "/api/users/delete-everything",
   ],
@@ -37,22 +59,38 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get("accessToken")?.value;
   const { pathname } = request.nextUrl;
   const pathLower = pathname.toLowerCase();
+  const method = request.method;
 
   const isApiRoute = pathLower.startsWith("/api/");
 
-  const isPublicApiRoute = matchesAny(pathLower, ROUTE_CONFIG.publicApiRoutes);
+  const isPublicApiRoute    = matchesAny(pathLower, ROUTE_CONFIG.publicApiRoutes);
+  const isAdminApiRoute     = matchesAny(pathLower, ROUTE_CONFIG.adminApiRoutes);
   const isProtectedApiRoute = matchesAny(pathLower, ROUTE_CONFIG.protectedApiRoutes);
-  const isAdminApiRoute =
-    pathLower === "/api/users" || /^\/api\/users\/\d+$/.test(pathLower);
 
-  const isAuthPage = ROUTE_CONFIG.authPages.some((p) => pathLower === p);
+  const isAuthPage      = ROUTE_CONFIG.authPages.some((p) => pathLower === p);
   const isProtectedPage = matchesAny(pathLower, ROUTE_CONFIG.protectedPages);
-  const isAdminPage = matchesAny(pathLower, ROUTE_CONFIG.adminPages);
+  const isAdminPage     = matchesAny(pathLower, ROUTE_CONFIG.adminPages);
 
+  // Rate limiting en login y register
+  if (isApiRoute && isPublicApiRoute && method === "POST") {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      "anonymous";
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "Demasiados intentos. Espera 15 minutos." },
+        { status: 429, headers: { "Retry-After": "900" } }
+      );
+    }
+  }
+
+  // Rutas API públicas — pasar sin token
   if (isApiRoute && isPublicApiRoute) {
     return NextResponse.next();
   }
 
+  // Rutas API protegidas — requieren token
   if (isApiRoute && (isAdminApiRoute || isProtectedApiRoute)) {
     if (!token) {
       return apiUnauthorized("No autenticado", 401);
@@ -62,6 +100,10 @@ export async function proxy(request: NextRequest) {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
       const { payload } = await jwtVerify(token, secret);
       const decoded = payload as unknown as JWTPayload;
+
+      if (isAdminApiRoute && decoded.role !== "ADMIN") {
+        return apiUnauthorized("Acceso denegado: se requiere rol ADMIN", 403);
+      }
 
       const requestHeaders = new Headers(request.headers);
       requestHeaders.set("x-user-id", String(decoded.userId));
@@ -75,20 +117,24 @@ export async function proxy(request: NextRequest) {
     }
   }
 
+  // Páginas protegidas sin token — redirigir a login
   if (!token && isProtectedPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Con token — verificar acceso
   if (token) {
     try {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
       const { payload } = await jwtVerify(token, secret);
       const decoded = payload as unknown as JWTPayload;
 
+      // Ya autenticado → no dejar entrar a login/register
       if (isAuthPage) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
 
+      // Páginas admin → verificar rol
       if (isAdminPage && decoded.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
@@ -105,6 +151,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/admin-dashboard/:path*",
     "/login",
     "/register",
     "/unauthorized",
