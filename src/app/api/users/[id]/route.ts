@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/infrastructure/db/prisma";
 
 async function getDecoded() {
   const cookieStore = await cookies();
