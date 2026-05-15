@@ -5,8 +5,12 @@ import { prisma } from "@/infrastructure/db/prisma";
 
 export const dynamic = "force-dynamic";
 
+type UserCreatedAt = {
+  createdAt: Date;
+};
+
 export default async function AdminDashboardPage() {
-  const users = await prisma.user.findMany({
+  const users: UserCreatedAt[] = await prisma.user.findMany({
     select: { createdAt: true },
   });
 

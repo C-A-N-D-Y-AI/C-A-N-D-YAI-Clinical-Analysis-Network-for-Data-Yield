@@ -20,7 +20,6 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/actions/*": ["./src/modules/user/actions/*"],
       "@/app/components/*": ["./src/shared/components/*"],
       "@/app/lib/prisma": ["./src/infrastructure/db/prisma"],
       "@/assets/*": ["./src/modules/anatomy/presentation/assets/*"],
@@ -30,9 +29,9 @@
         "./src/modules/user/application/*"
       ],
       "@/integrations/supabase/*": ["./src/infrastructure/storage/supabase/*"],
-      "@/lib/hash": ["./src/infrastructure/auth/hash"],
+      "@/lib/hash": ["./src/infrastructure/security/hash"],
       "@/lib/jwt": ["./src/infrastructure/auth/jwt"],
-      "@/lib/pdf-parser": ["./src/modules/upload/application/pdf-parser"],
+      "@/lib/pdf-parser": ["./src/modules/upload/infrastructure/pdf-parser"],
       "@/lib/prisma": ["./src/infrastructure/db/prisma"],
       "@/lib/utils": ["./src/shared/utils/utils"],
       "@/types/*": [
@@ -50,9 +49,8 @@
     "**/*.mts"
   ],
   "exclude": [
-    "node_modules",
-    ".next/dev",
-    "src/infrastructure/ai/supabase/functions",
-    "src/tests"
-  ]
-}
+      "node_modules",
+      ".next/dev",
+      "src/infrastructure/ai/supabase/functions"
+    ]
+  }

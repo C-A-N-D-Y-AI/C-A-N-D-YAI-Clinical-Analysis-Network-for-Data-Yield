@@ -8,8 +8,6 @@ export async function GET() {
     const cookieStore = await cookies(); 
     const token = cookieStore.get("accessToken")?.value;
 
-    console.log("TOKEN:", token); 
-
     if (!token) {
       return NextResponse.json({ success: false, error: "No autenticado" }, { status: 401 });
     }
