@@ -50,7 +50,7 @@ export default function Navbar({ user }: NavbarProps) {
       ),
     },
     {
-      href: "/dashboard/recomendaciones",
+      href: "/dashboard/AI",
       label: "AI",
       icon: (
         <path d="M10 2l2.5 5L18 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1L10 2z" />
