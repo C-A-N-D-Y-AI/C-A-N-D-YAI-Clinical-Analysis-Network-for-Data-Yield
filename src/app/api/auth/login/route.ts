@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { prisma } from "@/infrastructure/db/prisma";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "@/infrastructure/auth/jwt";
 
 export async function POST(req: Request) {
   try {
@@ -35,17 +38,8 @@ export async function POST(req: Request) {
     }
 
     // Aumentamos el tiempo a 1 día para que no te de 401 mientras pruebas
-    const accessToken = jwt.sign(
-      { userId: user.id, role: user.role },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1d" } 
-    );
-
-    const refreshToken = jwt.sign(
-      { userId: user.id, role: user.role },
-      process.env.JWT_REFRESH_SECRET!,
-      { expiresIn: "7d" }
-    );
+    const accessToken = generateAccessToken({ userId: user.id, role: user.role });
+    const refreshToken = generateRefreshToken({ userId: user.id, role: user.role });
 
     // ARREGLO CLAVE: Agregamos success: true para que el DashboardRedirect lo lea
     const response = NextResponse.json({
@@ -77,6 +71,29 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("[LOGIN ERROR]", error);
+
+    if (error instanceof Error) {
+      if (error.message.includes("DATABASE_URL")) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Falta configurar DATABASE_URL en .env.local",
+          },
+          { status: 500 }
+        );
+      }
+
+      if (error.message.includes("JWT_")) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Faltan JWT_SECRET/JWT_ACCESS_SECRET o JWT_REFRESH_SECRET en .env.local",
+          },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { success: false, error: "Error interno del servidor" },
       { status: 500 }

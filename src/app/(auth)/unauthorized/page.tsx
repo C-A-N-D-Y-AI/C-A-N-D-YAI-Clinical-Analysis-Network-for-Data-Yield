@@ -29,7 +29,12 @@ export default function UnauthorizedPage() {
         Acceso <span className="text-red-500">Restringido</span>
       </h1>
       
-      <p className="max-w-md text-balance text-slate-400">
+      <p className="max-w-md text-balance text-slate-400"><Link
+          href="/login"
+          className="flex h-12 items-center justify-center rounded-full border border-slate-800 px-8 text-sm font-bold text-slate-400 transition-all hover:border-white/20 hover:text-white"
+        >
+          Cambiar de Cuenta
+        </Link>
         Su perfil actual no cuenta con las credenciales necesarias para acceder a este módulo de <span className="text-slate-200 font-semibold">C.A.N.D.Y.</span>
       </p>
 
@@ -41,12 +46,6 @@ export default function UnauthorizedPage() {
           Ir al Panel Principal
         </Link>
         
-        <Link
-          href="/login"
-          className="flex h-12 items-center justify-center rounded-full border border-slate-800 px-8 text-sm font-bold text-slate-400 transition-all hover:border-white/20 hover:text-white"
-        >
-          Cambiar de Cuenta
-        </Link>
       </div>
 
       <p className="mt-12 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600">

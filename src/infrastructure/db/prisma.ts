@@ -7,10 +7,6 @@ const connectionString =
   process.env.SESSION_DATABASE_URL ??
   process.env.DATABASE_URL;
 
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not configured");
-}
-
 function shouldUseSsl(url: string) {
   const databaseUrl = new URL(url);
   return databaseUrl.hostname.includes("supabase.com");
@@ -28,6 +24,10 @@ function logDatabaseTarget(url: string) {
 }
 
 const prismaClientSingleton = () => {
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not configured");
+  }
+
   logDatabaseTarget(connectionString);
 
   const pool = new Pool({
@@ -51,17 +51,28 @@ const globalForPrisma = globalThis as unknown as {
     | undefined;
 };
 
-if (
-  process.env.NODE_ENV !== "production" &&
-  globalForPrisma.prisma?.connectionString !== connectionString
-) {
-  void globalForPrisma.prisma?.client.$disconnect();
-  globalForPrisma.prisma = undefined;
+function getPrismaClient() {
+  if (
+    process.env.NODE_ENV !== "production" &&
+    globalForPrisma.prisma?.connectionString !== connectionString
+  ) {
+    void globalForPrisma.prisma?.client.$disconnect();
+    globalForPrisma.prisma = undefined;
+  }
+
+  const client = globalForPrisma.prisma?.client ?? prismaClientSingleton();
+
+  if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = { client, connectionString: connectionString ?? "" };
+  }
+
+  return client;
 }
 
-export const prisma =
-  globalForPrisma.prisma?.client ?? prismaClientSingleton();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = { client: prisma, connectionString };
-}
+export const prisma = new Proxy({} as PrismaClientSingleton, {
+  get(_target, prop, receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client, prop, receiver);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});

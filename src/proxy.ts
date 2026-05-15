@@ -27,7 +27,7 @@ function checkRateLimit(ip: string): boolean {
 const ROUTE_CONFIG = {
   authPages: ["/login", "/register"],
   protectedPages: ["/dashboard", "/admin-dashboard"],
-  adminPages: ["/dashboard/admin", "/dashboard/users", "/admin-dashboard"],
+  adminPages: ["/dashboard/admin", "/admin-dashboard"],
   publicApiRoutes: [
     "/api/auth/login",
     "/api/auth/register",
@@ -51,8 +51,18 @@ function matchesAny(path: string, routes: readonly string[]): boolean {
   return routes.some((route) => path.startsWith(route));
 }
 
-function apiUnauthorized(message: string, status: 401 | 403) {
+function apiUnauthorized(message: string, status: 401 | 403 | 500) {
   return NextResponse.json({ error: message }, { status });
+}
+
+function getJwtSecret() {
+  return process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET;
+}
+
+function clearAuthCookies(response: NextResponse) {
+  response.cookies.delete("accessToken");
+  response.cookies.delete("refreshToken");
+  return response;
 }
 
 export async function proxy(request: NextRequest) {
@@ -97,7 +107,12 @@ export async function proxy(request: NextRequest) {
     }
 
     try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const jwtSecret = getJwtSecret();
+      if (!jwtSecret) {
+        return apiUnauthorized("Servidor sin JWT_SECRET/JWT_ACCESS_SECRET configurado", 500);
+      }
+
+      const secret = new TextEncoder().encode(jwtSecret);
       const { payload } = await jwtVerify(token, secret);
       const decoded = payload as unknown as JWTPayload;
 
@@ -112,8 +127,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next({ request: { headers: requestHeaders } });
     } catch {
       const response = apiUnauthorized("Token inválido o expirado", 401);
-      response.cookies.delete("accessToken");
-      return response;
+      return clearAuthCookies(response);
     }
   }
 
@@ -125,7 +139,15 @@ export async function proxy(request: NextRequest) {
   // Con token — verificar acceso
   if (token) {
     try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      const jwtSecret = getJwtSecret();
+      if (!jwtSecret) {
+        const response = isAuthPage
+          ? NextResponse.next()
+          : NextResponse.redirect(new URL("/login", request.url));
+        return clearAuthCookies(response);
+      }
+
+      const secret = new TextEncoder().encode(jwtSecret);
       const { payload } = await jwtVerify(token, secret);
       const decoded = payload as unknown as JWTPayload;
 
@@ -139,9 +161,10 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
     } catch {
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("accessToken");
-      return response;
+      const response = isAuthPage
+        ? NextResponse.next()
+        : NextResponse.redirect(new URL("/login", request.url));
+      return clearAuthCookies(response);
     }
   }
 

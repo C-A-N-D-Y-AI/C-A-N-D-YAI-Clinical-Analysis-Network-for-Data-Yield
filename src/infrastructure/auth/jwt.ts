@@ -3,10 +3,20 @@ import jwt from "jsonwebtoken";
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET ?? process.env.JWT_SECRET;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
-if (!ACCESS_SECRET || !REFRESH_SECRET) {
-  throw new Error(
-    "FATAL: JWT_SECRET/JWT_ACCESS_SECRET y JWT_REFRESH_SECRET deben estar definidos."
-  );
+function getAccessSecret() {
+  if (!ACCESS_SECRET) {
+    throw new Error("FATAL: JWT_SECRET/JWT_ACCESS_SECRET debe estar definido.");
+  }
+
+  return ACCESS_SECRET;
+}
+
+function getRefreshSecret() {
+  if (!REFRESH_SECRET) {
+    throw new Error("FATAL: JWT_REFRESH_SECRET debe estar definido.");
+  }
+
+  return REFRESH_SECRET;
 }
 
 export interface JWTPayload {
@@ -17,16 +27,16 @@ export interface JWTPayload {
 }
 
 export function generateAccessToken(payload: JWTPayload): string {
-  return jwt.sign(payload, ACCESS_SECRET!, { expiresIn: "1d" });
+  return jwt.sign(payload, getAccessSecret(), { expiresIn: "1d" });
 }
 
 export function generateRefreshToken(payload: JWTPayload): string {
-  return jwt.sign(payload, REFRESH_SECRET!, { expiresIn: "7d" });
+  return jwt.sign(payload, getRefreshSecret(), { expiresIn: "7d" });
 }
 
 export function validateAccessToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, ACCESS_SECRET!) as JWTPayload;
+    return jwt.verify(token, getAccessSecret()) as JWTPayload;
   } catch {
     return null;
   }
@@ -34,7 +44,7 @@ export function validateAccessToken(token: string): JWTPayload | null {
 
 export function validateRefreshToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, REFRESH_SECRET!) as JWTPayload;
+    return jwt.verify(token, getRefreshSecret()) as JWTPayload;
   } catch {
     return null;
   }
